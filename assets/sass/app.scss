@@ -5,8 +5,4 @@
 @use "modules/booking";
 @use "modules/plated_meals";
 @use "modules/sliding_form";
-
-
-body {
-  background-color: red;
-}
+@use "modules/woocommerce";

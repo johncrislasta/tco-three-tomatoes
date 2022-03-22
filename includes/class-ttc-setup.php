@@ -21,7 +21,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Setup' ) ) :
          * @since 1.0.0
          * @var string
          */
-        public $version = '1.0.0.134';
+        public $version = '1.0.0.135';
 
 
         /**

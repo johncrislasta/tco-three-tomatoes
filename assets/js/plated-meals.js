@@ -227,7 +227,14 @@ jQuery(function($){
             let plate_count = $(this).val();
             let total_count = get_total_meal_plates();
 
-            let max_count = guest_count - total_count + plate_count;
+            let max_count = parseInt( guest_count ) - parseInt( total_count ) + parseInt( plate_count );
+
+            console.log([parseInt( guest_count ),
+                parseInt( total_count ),
+                parseInt( plate_count ),
+                parseInt( max_count )
+                ]
+            );
 
             // Update max attribute
             $(this).attr('max', max_count );

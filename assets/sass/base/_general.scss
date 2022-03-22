@@ -1,0 +1,20 @@
+// Styles that apply to all elements that are common in almost, if not all, of the pages in the website
+@use '../abstracts/colors' as *;
+
+@each $label, $color in $global_palette {
+  .#{$label}-background,
+  .bg-#{$label} {
+    background-color: #{$color} !important;
+  }
+}
+
+@each $label, $background, $color in $alert {
+  .alert.alert-#{$label} {
+    color: #{$color} !important;
+    background: rgba($background, .2);
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+}

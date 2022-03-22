@@ -1,0 +1,18 @@
+.notes {
+  max-height: 40vh;
+  overflow: auto;
+
+  li:nth-child(even) {
+    background: #f7f7f7
+  }
+}
+
+.note_create {
+  display: flex;
+  width: 100%;
+  gap: 1em;
+
+  .note_message {
+    width: 100%;
+  }
+}

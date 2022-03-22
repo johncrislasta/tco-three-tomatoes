@@ -1,0 +1,29 @@
+#booking_feed {
+
+  .feed-item {
+    display: flex;
+    gap: 1em;
+
+    .user-avatar {
+      display: none;
+    }
+
+    &__date {
+      margin-left: auto;
+    }
+
+    &.note .user-avatar {
+      display: block;
+
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+      }
+    }
+
+    &.private {
+      background: #faffd7;
+    }
+  }
+}

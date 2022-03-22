@@ -1,0 +1,43 @@
+$primary: #157940;
+$primary_dark: #0A4F28;
+$primary_xdark: #0a341a;
+$primary_light: #19a560;
+
+$secondary: #B19130;
+$secondary_light: #caa932;
+
+$black: #191919;
+$white: #fff;
+$gray: #eaeaeb;
+$gray_light: #F0F0F0;
+$gray_dark: #828282;
+$gray_xdark: #191919;
+
+$success: #5CB85C;
+$danger: #D9534F;
+$danger_dark: darken($danger, 10%);
+$warning: #F4B72D;
+$warning_dark: darken($warning, 10%);
+
+$global_palette: (
+        primary: $primary,
+        primary_light: $primary_light,
+        primary_dark: $primary_dark,
+        primary_xdark: $primary_xdark,
+        secondary: $secondary,
+        secondary_light: $secondary_light,
+        "white": $white,
+        "gray": $gray,
+        gray_xdark: $gray_xdark,
+        success: $success,
+        danger: $danger,
+        danger_dark: $danger_dark,
+        warning: $warning,
+        warning_dark: $warning_dark
+);
+
+$alert: (
+        (success, $success, $success),
+        (danger, $danger, $danger),
+        (warning, $warning, $black)
+);

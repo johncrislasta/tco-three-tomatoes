@@ -1,0 +1,9 @@
+<div class="booking-details edit-inline">
+    <h2>Details</h2>
+    <div data-name="start_date" class="editable start-date">Start Date: <?php echo $start_date ?></div>
+    <div data-name="start_time" class="editable start-time" class="start-time">Start Time: <?php echo $start_time ?></div>
+    <div data-name="end_date" class="editable end-date">End Date: <?php echo $end_date ?></div>
+    <div data-name="end_time" class="editable end-time">End Time: <?php echo $end_time ?></div>
+    <div data-name="customer_name" class="editable customer-name">Customer Name: <?php echo $customer_name ?></div>
+    <div data-name="number_of_guests" class="editable number-of-guests">Number of Guests: <?php echo $number_of_guests ?></div>
+</div>

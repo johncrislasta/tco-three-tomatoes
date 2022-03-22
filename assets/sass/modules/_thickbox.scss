@@ -1,0 +1,10 @@
+div#TB_window {
+  margin: 1em !important;
+  inset: 0 !important;
+  width: calc(100% - 2em) !important;
+
+  #TB_ajaxContent {
+    width: calc(100% - 30px) !important;
+    height: calc(100% - 45px) !important;
+  }
+}

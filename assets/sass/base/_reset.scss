@@ -1,0 +1,10 @@
+@use '../abstracts/colors' as *;
+
+html, body {
+  background: none;
+}
+
+body {
+  background-color: $white;
+  position: relative;
+}

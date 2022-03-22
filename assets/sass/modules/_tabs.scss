@@ -1,0 +1,12 @@
+.tab-menu {
+  display: flex;
+  column-gap: 1em;
+}
+
+.tab-content {
+  display: none;
+
+  &:target {
+    display: block;
+  }
+}

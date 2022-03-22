@@ -1,0 +1,36 @@
+@use '../abstracts/colors' as *;
+@use '../abstracts/mixins' as *;
+
+@each $label, $color in $global_palette {
+  .#{$label}-text,
+  .text-#{$label} {
+    color: #{$color} !important;
+  }
+}
+
+body {
+  //* {
+  //  font-family: 'Inter', sans-serif;
+  //  color: $black;
+  //}
+
+  pre * {
+    font-family: monospace;
+  }
+
+  //a {
+  //  text-decoration: none;
+  //  color: $primary-light;
+  //  font-weight: bold;
+  //
+  //  &:hover, &:focus {
+  //    text-decoration: none;
+  //    outline: none;
+  //  }
+  //
+  //  &:focus {
+  //    opacity: 0.9;
+  //  }
+  //}
+
+}

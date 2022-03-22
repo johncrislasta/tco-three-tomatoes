@@ -1,0 +1,13 @@
+
+:root {
+  --delivery-events-color: orange;
+  --catering-events-color: green;
+}
+
+.delivery-event {
+  background: var(--delivery-events-color);
+}
+
+.catering-event {
+  background: var(--catering-events-color);
+}

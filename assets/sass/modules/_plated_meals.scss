@@ -1,0 +1,45 @@
+.meal-item {
+  > input[type=radio]:checked {
+
+    ~ h3, ~ .choices {
+      display: block;
+    }
+  }
+
+  > h3, > .choices {
+    display: none;
+  }
+}
+
+#catering_details {
+
+  .datepicker.is-inline {
+    display: block;
+
+    .datepicker__wrapper {
+      width: 100%;
+
+      .datepicker__daynum {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+
+  > div {
+    padding: 0.5em;
+    border: 1px solid lightgray;
+    width: calc(50% - 1em);
+
+    img {
+      aspect-ratio: 1/1;
+      object-fit: cover;
+    }
+  }
+}

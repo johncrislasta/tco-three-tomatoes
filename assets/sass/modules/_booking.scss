@@ -1,0 +1,91 @@
+@use '../abstracts/breakpoints' as *;
+
+
+.ttc-booking-container {
+
+  label {
+    display: inline-block;
+
+    &.window-time-label {
+      display: block;
+    }
+  }
+
+  .booking-details {
+    display: none;
+  }
+
+  #delivery_booking:checked ~ #delivery_details {
+    display: block;
+  }
+
+  #catering_booking:checked ~ #catering_details {
+    display: block;
+  }
+
+}
+
+.booking-form {
+  .booking-form-container {
+
+    display: grid;
+    grid-template-areas:
+            'nav'
+            'details'
+            'notes'
+            'uploads';
+
+    .tab-menu {
+      grid-area: nav;
+    }
+
+    #booking_details {
+      grid-area: details;
+    }
+
+    #booking_notes {
+      grid-area: notes;
+    }
+
+    #booking_uploads {
+      grid-area: uploads;
+    }
+
+    #booking_feed {
+      grid-area: feed;
+    }
+
+    #booking_note_form {
+      grid-area: notes;
+    }
+
+    @media only screen and (min-width: $screen_medium) {
+
+      grid-template-areas:
+              'details details feed feed'
+              'uploads uploads feed feed'
+              'uploads uploads notes notes';
+
+      grid-template-rows: auto auto 3em;
+
+      .tab-menu {
+        grid-area: details;
+        display: none;
+      }
+
+      .tab-content {
+        display: block;
+      }
+    }
+  }
+}
+
+.note_create {
+
+  select.note_type {
+    display: none;
+  }
+  input.note_visibility:checked + select.note_type {
+    display: block;
+  }
+}

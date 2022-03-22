@@ -1,0 +1,26 @@
+#uploads-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+
+  .upload-item {
+    position: relative;
+
+    .file-name {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(white, 0.9);
+      padding: 1em;
+      word-break: break-all;
+    }
+
+    &:hover .file-name {
+      display: block;
+    }
+
+    .upload-remove {
+      display: none; // not sure if this is needed
+    }
+  }
+}

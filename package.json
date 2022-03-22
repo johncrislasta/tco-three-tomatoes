@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "sass": "^1.47.0"
+  },
+  "dependencies": {
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-dart-sass": "^1.0.2",
+    "gulp-sourcemaps": "^3.0.0",
+    "node-sass": "^7.0.1"
+  }
+}

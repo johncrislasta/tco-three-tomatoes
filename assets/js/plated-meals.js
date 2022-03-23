@@ -37,7 +37,7 @@ jQuery(function($){
     }
 
     // Running plated meal order calculation
-    let guest_count = 10;
+    let guest_count;
 
     // ------------------------------- //
     // Update Guest Count Detail

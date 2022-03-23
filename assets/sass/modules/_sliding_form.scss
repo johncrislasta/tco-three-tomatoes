@@ -14,13 +14,16 @@
     overflow-y: auto;
     display: flex;
     flex-flow: column;
-    justify-content: center;
+    justify-content: flex-start;
 
 
     &.active {
       opacity: 1;
       pointer-events: auto;
     }
+
+
+
   }
 
   // Hide prev button if first slide is active
@@ -38,9 +41,11 @@
     grid-area: nav;
 
     .slider-nav-button {
-      padding: 1em 2em;
-      border-radius: 2em;
+      border-radius: 5px;
       cursor: pointer;
+      background-color: #309e9a;
+      color: white;
+      margin-left: 10px;
     }
   }
 }

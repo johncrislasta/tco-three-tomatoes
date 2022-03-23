@@ -1,0 +1,36 @@
+.datepicker {
+
+  &__day.is-disabled,
+  &__day.is-otherMonth,
+  table th {
+    color: #309e9a5c !important;
+  }
+
+  &__header {
+    background-color: #309e9a !important;
+    border-color: #309e9a !important;
+    padding: 1.25rem !important;
+  }
+
+  &__wrapper {
+    border-color: #309e9a !important;
+  }
+
+  &__title {
+    font-family: 'Yanone Kaffeesatz' !important;
+    font-size: 24px !important;
+  }
+
+  &__day div:hover, &__day.is-highlighted div {
+    background-color: #309e9a5c !important;
+  }
+
+  &__day.is-selected div {
+    background: #309e9a !important;
+  }
+  &__day.is-selected div:hover,&__day.is-selected:hover div::after {
+    background: #309e9a !important;
+  }
+
+}
+

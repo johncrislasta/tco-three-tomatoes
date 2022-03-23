@@ -89,3 +89,17 @@
     display: block;
   }
 }
+
+#guest{
+  &_arrival_time,&_departure_time {
+    margin-top: 30px;
+  }
+
+  &_arrival_time label,&_departure_time label {
+    font-size: 24px;
+    font-family: 'Yanone Kaffeesatz';
+    color: #309e9a;
+  }
+
+
+}

@@ -126,6 +126,7 @@ jQuery(function($){
         // Warning, this assumes there is one or no image added for the product. If it's an entire gallery, we have to rethink how we update the rest of the images.
         const $image = $(this).next('label').find('.meal-image img');
         const img_src = $image.attr('src');
+        add_to_meal_plates($(this).attr("id"));
 
         $('.wp-post-image').attr('src', img_src);
 
@@ -224,24 +225,102 @@ jQuery(function($){
 
         // retrieve total number of plates entered
         $entree_plates.each(function(){
-            let plate_count = $(this).val();
+            let plate_count = $(this).val() ? parseInt( $(this).val() ) : 0;
+
+            populate_meal_plate( $(this).attr("name"), plate_count );
+
+            update_plated_meal_order_details('plate-meal-' + $(this).attr("name"),
+                'Number of Plates for ' + $(this).data('dish_name') + ': ',
+                plate_count );
+
             let total_count = get_total_meal_plates();
 
-            //let max_count = parseInt( guest_count ) - parseInt( total_count ) + parseInt( plate_count );
-            let max_count = parseInt( guest_count );
+            let max_count = guest_count - total_count + plate_count;
 
-            console.log([parseInt( guest_count ),
-                parseInt( total_count ),
-                plate_count,
-                max_count
-                ]
-            );
-
-            console.log("themeco1");
+            // console.log({
+            //     id: $(this).attr("name"),
+            //     guestcount: guest_count,
+            //     totalcount: total_count,
+            //     platecount: plate_count,
+            //     maxcount: max_count,
+            //     meal_plates: meal_plates,
+            //     current_meal_id: current_meal_id
+            //     }
+            // );
 
             // Update max attribute
             $(this).attr('max', max_count );
         })
+    });
+
+
+    // ------------------------------- //
+    // Limit meal part checkboxes selection
+    // ------------------------------- //
+
+    // implement choice limits on plated meals (or even buffets)
+    $choose_hors_doeuvres.on('change', "input[type=checkbox]", function () {
+
+        let input_name = $(this).attr("name");
+        let max_allowed = $(this).parents('.choices').attr("data-limit");
+        let $checked_items = $("input[name=" + input_name + "]:checked");
+        let checked_items_array = [];
+
+        // Get amount of checked boxes with the same name
+        if ($checked_items.length >= max_allowed) {
+
+            // Disable the remaining checkboxes of the same name
+            $("input[name=" + input_name + "]").not(":checked").attr("disabled", "disabled");
+
+        } else {
+
+            // Enable the inputs again when he unchecks one
+            $("input[name=" + input_name + "]").removeAttr("disabled");
+
+        }
+
+        // ------------------------------- //
+        // Display choices of Hors D'oeuvre
+        // ------------------------------- //
+
+        $checked_items.each(function(){
+            checked_items_array.push( $(this).val() )
+        });
+    }).on('change', "input[type=radio]", function () {
+        update_plated_meal_order_details('plate-meal-selected-hors-doeuvres', 'Selected Hors D\'oeuvres: ', $(this).val() );
+    });
+
+    // implement choice limits on plated meal parts
+    $choose_desserts.on('change', "input[type=checkbox]", function () {
+
+        var input_name = $(this).attr("name");
+        var max_allowed = $(this).parents('.choices').attr("data-limit");
+        let $checked_items = $("input[name=" + input_name + "]:checked");
+        let checked_items_array = [];
+
+        // Get amount of checked boxes with the same name
+        if ($("input[name=" + input_name + "]:checked").length >= max_allowed) {
+
+            // Disable the remaining checkboxes of the same name
+            $("input[name=" + input_name + "]").not(":checked").attr("disabled", "disabled");
+
+        } else {
+
+            // Enable the inputs again when he unchecks one
+            $("input[name=" + input_name + "]").removeAttr("disabled");
+
+        }
+
+        // ------------------------------- //
+        // Display choices of Desserts
+        // ------------------------------- //
+
+        $checked_items.each(function(){
+            checked_items_array.push( $(this).val() )
+        });
+        update_plated_meal_order_details('plate-meal-selected-desserts', 'Selected Desserts: ', checked_items_array.join(', ') );
+    }).on('change', "input[type=radio]", function () {
+        update_plated_meal_order_details('plate-meal-selected-dessert', 'Selected Dessert: ', $(this).val() );
     });
 
 

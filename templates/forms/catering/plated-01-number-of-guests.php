@@ -1,1 +1,1 @@
-<input type="number" min="10" placeholder="10" value="10">
+<input id="number-guest-input" type="number" min="10" placeholder="10" value="10">

@@ -231,10 +231,12 @@ jQuery(function($){
 
             console.log([parseInt( guest_count ),
                 parseInt( total_count ),
-                parseInt( plate_count ),
-                parseInt( max_count )
+                plate_count,
+                max_count
                 ]
             );
+
+            console.log("themeco1");
 
             // Update max attribute
             $(this).attr('max', max_count );

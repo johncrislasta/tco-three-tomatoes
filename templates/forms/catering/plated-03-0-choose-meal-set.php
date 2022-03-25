@@ -8,7 +8,7 @@ foreach( $plated_meals as $meal_index => $meal ):
      data-id="<?php echo $meal_title ?>"
      data-meal_index="<?php echo $meal_index?>">
 
-    <input type="radio" value="<?php echo $meal['name'] ?>" name="plated_meal" id='<?php echo $meal_title ?>'/>
+    <input type="radio" value="<?php echo $meal['name'] ?>" name="plated_meal" id='<?php echo $meal_title ?>' data-price="<?php echo $meal['price'] ?>"/>
 
     <label for="<?php echo $meal_title ?>">
         <span class="meal-name">

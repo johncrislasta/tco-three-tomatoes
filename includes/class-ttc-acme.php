@@ -146,4 +146,15 @@ class Acme
         }
     }
 
+    public static function get_image_link( $image, $size = "full" )
+    {
+        if( is_int( $image ) )
+            return wp_get_attachment_url( $image );
+
+        if( is_array( $image ) )
+            return $image[ $size ];
+
+        return $image;
+    }
+
 }

@@ -468,6 +468,14 @@ jQuery(function($){
 
     });
 
+    //- Active state of select hors doeuvres item-//
 
+    $(".hors_doeuvres-item").click(function(){
+        if($(this).hasClass("active")) {
+            $(this).removeClass("active");
+        } else {
+            $(this).addClass("active")
+        }
+    });
 
 });

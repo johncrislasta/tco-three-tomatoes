@@ -140,3 +140,11 @@ div#plated_meal_order_details {
   display: inline-block;
   padding-left: 1em;
 }
+
+.addon,
+.notes {
+  textarea {
+    width: 100%;
+    height: 15em;
+  }
+}

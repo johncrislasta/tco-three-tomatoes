@@ -214,6 +214,8 @@ jQuery(function($){
                 $choose_desserts.html(data.desserts)
                     .removeClass('loading');
 
+                $choose_entrees.find('input[type=number]').attr('max', guest_count);
+
             }
         });
 

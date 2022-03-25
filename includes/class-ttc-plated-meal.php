@@ -93,6 +93,12 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             return $addons;
         }
 
+        public function get_meal_notes($product_id) {
+            $addons = get_field('notes', $product_id);
+
+            return $addons;
+        }
+
         public function print_form()
         {
             $product_id = get_the_ID();
@@ -101,27 +107,47 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             $addon_slides = array();
 
-            foreach( $addon_modules as $module ) {
+            if (!empty($addon_modules) )
+            {
+                foreach( $addon_modules as $module ) {
 
-                $module[ 'question_slug' ] = sanitize_title( $module['question'] );
-                $module[ 'imgsrc_for_yes' ] = Acme::get_image_link( $module['image_for_yes'] );
-                $module[ 'imgsrc_for_no' ] = Acme::get_image_link( $module['image_for_no'] );
-                $module[ 'currency' ] = get_woocommerce_currency_symbol();
+                    $module[ 'question_slug' ] = sanitize_title( $module['question'] );
+                    $module[ 'imgsrc_for_yes' ] = Acme::get_image_link( $module['image_for_yes'] );
+                    $module[ 'imgsrc_for_no' ] = Acme::get_image_link( $module['image_for_no'] );
+                    $module[ 'currency' ] = get_woocommerce_currency_symbol();
 
 
-                $module[ 'secondary_question_slug' ] = sanitize_title( $module['secondary_question'] );
+                    $module[ 'secondary_question_slug' ] = sanitize_title( $module['secondary_question'] );
 
-                if( isset( $module['choices'] ) ) {
-                    foreach( $module['choices'] as $key => $choice ) {
-                        $module['choices'][$key]['imgsrc'] = Acme::get_image_link( $choice['image'] );
+                    if( isset( $module['choices'] ) ) {
+                        foreach( $module['choices'] as $key => $choice ) {
+                            $module['choices'][$key]['imgsrc'] = Acme::get_image_link( $choice['image'] );
+                        }
                     }
-                }
 
-                $addon_slides[] = array(
-                    'id'        => 'plated-addon-' . $module['question_slug'],
-                    'header'    => 'Add-on',
-                    'content'   => Acme::get_template("addons/{$module['acf_fc_layout']}", $module ),
-                );
+                    $addon_slides[] = array(
+                        'id'        => 'plated-addon-' . $module['question_slug'],
+                        'header'    => 'Add-on',
+                        'content'   => Acme::get_template("forms/addons/{$module['acf_fc_layout']}", $module ),
+                    );
+                }
+            }
+
+            $meal_notes = $this->get_meal_notes($product_id);
+            $notes_slides = array();
+
+            if (!empty($meal_notes) )
+            {
+                foreach( $meal_notes as $note ) {
+
+                    $note[ 'question_slug' ] = sanitize_title( $note['question'] );
+
+                    $notes_slides[] = array(
+                        'id'        => 'plated-notes-' . $module['question_slug'],
+                        'header'    => 'Notes',
+                        'content'   => Acme::get_template("forms/fields/notes-textarea", $note ),
+                    );
+                }
             }
 
 //            Acme::diep($addons);
@@ -158,7 +184,15 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 ),
             );
 
-            $slides = array_merge($slides, $addon_slides);
+            $final_slides = array (
+                array (
+                    'id'        => 'plated-terms-conditions',
+                    'header'    => 'Terms and Conditions',
+                    'content'   => Acme::get_template('forms/catering/plated-07-terms-and-conditions-submit'),
+                ),
+            );
+
+            $slides = array_merge($slides, $addon_slides, $notes_slides, $final_slides);
 
             echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id], 'form_id' => 'plated_meal_form' ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );

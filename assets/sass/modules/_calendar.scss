@@ -23,6 +23,7 @@
 
   &__day div:hover, &__day.is-highlighted div {
     background-color: #309e9a5c !important;
+    color: #fff !important;
   }
 
   &__day.is-selected div {

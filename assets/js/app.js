@@ -57,23 +57,4 @@ jQuery(function($){
         $('#delivery_window_time_container').append($dwt_label);
     }
 
-    // implement choice limits on plated meals (or even buffets)
-    $("input[type=checkbox]").change(function () {
-
-        var InputName = $(this).attr("name");
-        var MaxAllowed = $(this).parents('.choices').attr("data-limit");
-
-        // Get amount of checked boxes with the same name
-        if ($("input[name=" + InputName + "]:checked").length >= MaxAllowed) {
-
-            // Disable the remaining checkboxes of the same name
-            $("input[name=" + InputName + "]").not(":checked").attr("disabled", "disabled");
-
-        } else {
-
-            // Enable the inputs again when he unchecks one
-            $("input[name=" + InputName + "]").removeAttr("disabled");
-
-        }
-    });
 });

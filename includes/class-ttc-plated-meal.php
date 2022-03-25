@@ -117,7 +117,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                     $module[ 'currency' ] = get_woocommerce_currency_symbol();
 
 
-                    $module[ 'secondary_question_slug' ] = sanitize_title( $module['secondary_question'] );
+                    $module[ 'secondary_question_slug' ] = isset( $module['secondary_question'] ) ? sanitize_title( $module['secondary_question'] ) : '';
 
                     if( isset( $module['choices'] ) ) {
                         foreach( $module['choices'] as $key => $choice ) {

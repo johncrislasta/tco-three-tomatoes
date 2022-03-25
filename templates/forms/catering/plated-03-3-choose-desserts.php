@@ -13,9 +13,6 @@ $meal_title = sanitize_title( $meal['name'] );
             <input type="<?php echo $field_type ?>" value="<?php echo $dessert['name'] ?>" name="plated_meal_dessert" id='<?php echo $dessert_title ?>'/>
 
             <label for="<?php echo $dessert_title ?>">
-                <span class="dessert-name">
-                    <?php echo $dessert['name'] ?>
-                </span>
 
                 <?php if( $dessert['price'] > 0 ): ?>
                 <span class="dessert-price">
@@ -26,6 +23,11 @@ $meal_title = sanitize_title( $meal['name'] );
                 <span class="dessert-image">
                     <img src="<?php echo $dessert['image'] ?>"/>
                 </span>
+
+                <span class="dessert-name">
+                    <?php echo $dessert['name'] ?>
+                </span>
+
                 <span class="dessert-description">
                     <?php echo $dessert['description'] ?>
                 </span>

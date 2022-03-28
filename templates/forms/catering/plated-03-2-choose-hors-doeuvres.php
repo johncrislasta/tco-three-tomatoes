@@ -14,9 +14,7 @@ $meal_title = sanitize_title( $meal['name'] );
             <input type="<?php echo $field_type ?>" value="<?php echo $hors_doeuvres['name'] ?>" name="plated_meal_hors_doeuvres" id='<?php echo $hors_doeuvres_title ?>'/>
 
             <label for="<?php echo $hors_doeuvres_title ?>">
-                <span class="hors_doeuvres-name">
-                    <?php echo $hors_doeuvres['name'] ?>
-                </span>
+
 
                 <?php if( $hors_doeuvres['price'] > 0 ): ?>
                 <span class="hors_doeuvres-price">
@@ -27,6 +25,11 @@ $meal_title = sanitize_title( $meal['name'] );
                 <span class="hors_doeuvres-image">
                     <img src="<?php echo $hors_doeuvres['image'] ?>"/>
                 </span>
+
+                <span class="hors_doeuvres-name">
+                    <?php echo $hors_doeuvres['name'] ?>
+                </span>
+
                 <span class="hors_doeuvres-description">
                     <?php echo $hors_doeuvres['description'] ?>
                 </span>

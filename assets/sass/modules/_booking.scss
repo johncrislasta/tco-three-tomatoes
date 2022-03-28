@@ -100,6 +100,12 @@
     font-family: 'Yanone Kaffeesatz';
     color: #309e9a;
   }
+  &_arrival_time select,&_departure_time select {
+    font-size: 18px;
+  }
 
+}
 
+input#number-guest-input {
+  font-size: 18px;
 }

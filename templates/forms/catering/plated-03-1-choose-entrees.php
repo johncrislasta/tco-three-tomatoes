@@ -12,9 +12,7 @@
         <div class="entree-item" data-name="<?php echo $entree['name'] ?>" data-price="<?php echo $entree['price'] ?>" data-id="<?php echo $entree_title ?>">
 
             <label for="<?php echo $entree_title ?>">
-                <span class="entree-name">
-                    <?php echo $entree['name'] ?>
-                </span>
+
                 <?php if( $entree['price'] > 0 ): ?>
                 <span class="entree-price">
                     + $ <?php echo $entree['price'] ?>
@@ -22,6 +20,9 @@
                 <?php endif ?>
                 <span class="entree-image">
                     <img src="<?php echo $entree['image'] ?>"/>
+                </span>
+                <span class="entree-name">
+                    <?php echo $entree['name'] ?>
                 </span>
                 <span class="entree-description">
                     <?php echo $entree['description'] ?>

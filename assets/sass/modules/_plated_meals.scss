@@ -121,12 +121,17 @@ div#plated_meal_order_details {
 .choices {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em;
+  gap: 1em;
 
   > div {
-    padding: 0.5em;
-    border: 1px solid lightgray;
+    padding: 1em;
+    border: 1px solid #309e9b;
     width: calc(50% - 1em);
+    background-color: #309e9b;
+    display: flex;
+    flex-direction: column;
+    border-radius: 6px;
+    position: relative;
 
     img {
       aspect-ratio: 1/1;
@@ -146,5 +151,182 @@ div#plated_meal_order_details {
   textarea {
     width: 100%;
     height: 15em;
+  }
+}
+
+.addon {
+  select {
+    font-size: 18px;
+  }
+  span p {
+    font-size: 20px;
+  }
+  input[type="radio"] {
+    opacity: 0;
+  }
+  .answer span.label {
+    position: relative;
+    left: 15px;
+    font-size: 20px;
+  }
+  .secondary-question {
+    .answer input:checked ~ span {
+      &:before {
+        content: '';
+        position: absolute;
+        height: 23px;
+        width: 23px;
+        top: 0;
+        left: -30px;
+        background: url(/wp-content/uploads/2022/03/check-selected.png);
+        background-size: contain;
+      }
+    }
+  }
+  .answer:nth-child(3) {
+    margin-bottom: 15px;
+  }
+  .answer:nth-child(2) input:checked ~ img ~ span {
+    &:before {
+      content: '';
+      position: absolute;
+      height: 23px;
+      width: 23px;
+      top: 0;
+      left: -30px;
+      background: url(/wp-content/uploads/2022/03/check-selected.png);
+      background-size: contain;
+    }
+
+  }
+  .answer:nth-child(3) input:checked ~ img ~ span {
+
+    &:before {
+      content: '';
+      position: absolute;
+      height: 23px;
+      width: 23px;
+      top: 0;
+      left: -30px;
+      background: url(/wp-content/uploads/2022/03/check-selected-cricle.png);
+      background-size: contain;
+    }
+
+  }
+
+}
+
+.entree {
+
+  &-name {
+    position: relative;
+    top: 15px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  &-description p {
+    margin-top: 20px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  &-item label {
+    color: #fff;
+
+    input[type='number'] {
+      margin-left: 10px;
+      margin-bottom: 0;
+      color: #000;
+      font-weight: 600;
+      width: 65px;
+    }
+    &:last-child {
+      margin-top: auto;
+    }
+  }
+
+}
+
+.hors_doeuvres {
+  &-item {
+    input {
+      opacity: 0;
+      position: absolute;
+      &:checked ~ label:before {
+        content: '';
+        position: absolute;
+        height: 40px;
+        width: 40px;
+        top: -13px;
+        right: -10px;
+        background: url(/wp-content/uploads/2022/03/check-selected.png);
+        z-index: 5;
+        background-size: contain;
+      }
+    }
+    &.active {
+      background-color: #216a68;
+    }
+  }
+  &-name {
+    position: relative;
+    top: 15px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
+  }
+  &-description p {
+    margin-top: 20px;
+    color: #fff;
+    line-height: 1;
+  }
+
+}
+
+.dessert {
+  &-item {
+    input {
+      opacity: 0;
+      position: absolute;
+      &:checked ~ label:before {
+        content: '';
+        position: absolute;
+        height: 40px;
+        width: 40px;
+        top: -13px;
+        right: -10px;
+        background: url(/wp-content/uploads/2022/03/check-selected.png);
+        z-index: 5;
+        background-size: contain;
+      }
+    }
+    &.active {
+      background-color: #216a68;
+    }
+  }
+  &-name {
+    position: relative;
+    top: 15px;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
+  }
+  &-description p {
+    margin-top: 20px;
+    color: #fff;
+    line-height: 1;
+  }
+  &-price {
+    position: relative;
+    top: 13px;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 600;
+    line-height: 1;
   }
 }

@@ -197,6 +197,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id], 'form_id' => 'plated_meal_form' ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );
         }
+
+        // @TODO: Hide original add to cart button.
+        //      Replace with a new add to cart button that calls an ajax function on click instead
+        //      This ajax function will return a redirect of ?add_to_cart={product_id} and has the SESSIONS populated
+
+        // @TODO: Add cart total details
+
     }
 
     Plated_Meal::instance();

@@ -8,11 +8,16 @@
     border-radius: 6px;
     position: relative;
 
-  > input[type=radio]:checked {
-
-    ~ h3, ~ .choices {
-      display: block;
-    }
+  > input[type=radio]:checked ~ p:before  {
+    content: "";
+    position: absolute;
+    height: 23px;
+    width: 23px;
+    top: 0;
+    right: 0;
+    background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+    background-size: contain;
+    z-index: 5;
   }
 
   > h3, > .choices {
@@ -247,7 +252,7 @@ div#plated_meal_order_details {
         width: 23px;
         top: 0;
         left: -30px;
-        background: url(/wp-content/uploads/2022/03/check-selected.png);
+        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
         background-size: contain;
       }
     }
@@ -263,7 +268,7 @@ div#plated_meal_order_details {
       width: 23px;
       top: 0;
       left: -30px;
-      background: url(/wp-content/uploads/2022/03/check-selected.png);
+      background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
       background-size: contain;
     }
 
@@ -277,7 +282,7 @@ div#plated_meal_order_details {
       width: 23px;
       top: 0;
       left: -30px;
-      background: url(/wp-content/uploads/2022/03/check-selected-cricle.png);
+      background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/close-circle.png);
       background-size: contain;
     }
 
@@ -331,7 +336,7 @@ div#plated_meal_order_details {
         width: 40px;
         top: -13px;
         right: -10px;
-        background: url(/wp-content/uploads/2022/03/check-selected.png);
+        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
         z-index: 5;
         background-size: contain;
       }
@@ -368,7 +373,7 @@ div#plated_meal_order_details {
         width: 40px;
         top: -13px;
         right: -10px;
-        background: url(/wp-content/uploads/2022/03/check-selected.png);
+        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
         z-index: 5;
         background-size: contain;
       }

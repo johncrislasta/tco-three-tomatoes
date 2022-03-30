@@ -1,8 +1,12 @@
 .meal-item {
 
-  &:not(:last-child) {
-    margin-bottom: 50px;
-  }
+    padding: 1em;
+    border: 1px solid #309e9b;
+    background-color: #309e9b;
+    display: flex;
+    flex-direction: column;
+    border-radius: 6px;
+    position: relative;
 
   > input[type=radio]:checked {
 
@@ -19,6 +23,7 @@
     display: none;
   }
 
+  /*
   .meal-description{
     display: none;
 
@@ -29,7 +34,8 @@
       padding: 30px;
     }
 
-  }
+  }*/
+  /*
   input[type='radio']:checked ~ label .meal-description {
     display: initial;
     position: absolute;
@@ -40,6 +46,8 @@
     color: #fff;
     text-align: center;
   }
+  */
+
 
   label {
     position: relative;
@@ -47,25 +55,86 @@
 
   .meal {
     &-name {
-      color: #393939;
+      position: relative;
+      top: 15px;
+      font-size: 18px;
+      color: #fff;
       font-weight: 600;
-      font-size: 30px;
+      line-height: 1;
     }
     &-price {
-      font-size: 20px;
-      color: #309e9b;
-      font-weight: bold;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    &-image {
+        margin: 0;
+      > img  {
+        max-height: 215px;
+        min-width: 215px;
+        object-fit: cover;
+      }
+    }
+    &-information {
+      margin: 0;
+      span {
+        color: #fff;
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
-  /*
-  .meal-name {
+
+}
+
+.meal {
+  &-plated-selection-wrapper {
+    display: flex;
+    gap: 1em;
 
   }
-  .meal-price {
-    font-size: 20px;
-    color: #309e9b;
-    font-weight: bold;
-  }*/
+}
+
+
+/* MODAL STYLING */
+.plated {
+  &-modal-box {
+    max-width: 50vw;
+    border: 10px solid #309e9b;
+    padding: 25px;
+
+    .meal-more-info-wrapper {
+      display: flex;
+      flex-direction: row;
+      column-gap: 20px;
+
+      .modal-meal-more-info {
+
+        .modal-meal-name {
+          font-size: 2em;
+          font-weight: 600;
+          color: #309e9b;
+        }
+
+      }
+
+    }
+
+    &::backdrop {
+      background-color: #00000090;
+    }
+
+  }
+}
+
+i.x-icon.tc-modal-close {
+  font-size: 20px;
+  position: absolute;
+  z-index: 5;
+  right: 11px;
+  top: 2px;
+  color: #309e9b;
+  cursor: pointer;
 }
 
 div#plated_meal_order_details {

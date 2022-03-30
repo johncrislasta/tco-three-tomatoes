@@ -558,4 +558,17 @@ jQuery(function($){
         }
     });
 
+    //- Selection of Plated Meals - Modal function -//
+    const tc_modal = document.querySelector('.plated-modal-box');
+    const tc_open_modal = document.querySelector('.tc-modal-open');
+    const tc_close_modal = document.querySelector('.tc-modal-close');
+
+    tc_open_modal.addEventListener('click', () => {
+        tc_modal.showModal();
+    })
+    tc_close_modal.addEventListener('click', () => {
+        tc_modal.close();
+    })
+
+
 });

@@ -18,6 +18,9 @@ jQuery(function($){
         const $plated_meal_order_detail = $('<div class="plated-meal-order-detail">');
         const $plated_meal_order_detail_title = $('<h5 class="plated-meal-order-detail-title">');
         const $plated_meal_order_detail_price = $('<span class="plated-meal-order-detail-price">').hide();
+        const $plated_meal_order_detail_total_price = $('<span class="plated-meal-order-detail-total-price">');
+        const $plated_meal_order_detail_item_price = $('<span class="plated-meal-order-detail-item-price">');
+        const $plated_meal_order_detail_guest_count = $('<span class="plated-meal-order-detail-guest-count">');
         const $plated_meal_order_detail_content = $('<div class="plated-meal-order-detail-content">');
 
         $plated_meal_order_detail_title.html( detail_title );
@@ -27,7 +30,15 @@ jQuery(function($){
         else
             $plated_meal_order_detail_price.hide();
 
-        $plated_meal_order_detail_price.html( currency_symbol + ' ' + detail_price);
+        $plated_meal_order_detail_total_price.html( currency_symbol + ' ' + detail_price * guest_count );
+        $plated_meal_order_detail_item_price.html( currency_symbol + ' ' + detail_price);
+        $plated_meal_order_detail_guest_count.html( guest_count );
+
+        $plated_meal_order_detail_price
+            .append( $plated_meal_order_detail_guest_count )
+            .append( $plated_meal_order_detail_item_price )
+            .append( $plated_meal_order_detail_total_price );
+
         $plated_meal_order_detail_title.append( $plated_meal_order_detail_price );
         $plated_meal_order_detail_content.html( detail_content );
         $plated_meal_order_detail.attr('id', detail_id )
@@ -36,25 +47,32 @@ jQuery(function($){
 
         $plated_meal_order_details.append($plated_meal_order_detail);
 
-        update_order_details( detail_id, detail_title, detail_content, detail_price, detail_parent, detail_parent_content );
+        // update_order_details( detail_id, detail_title, detail_content, detail_price, detail_parent, detail_parent_content );
 
         console.log( 'added detail ' + detail_id );
     }
 
     function update_plated_meal_order_details( detail_id, detail_title, detail_content, detail_price = false, detail_parent = false, detail_parent_content = false )
     {
+        if( detail_parent !== false && detail_parent_content !== false )
+            detail_id = wpFeSanitizeTitle( detail_parent + "-" + detail_parent_content + "-" + detail_id );
+
         const $detail = $('#' + detail_id);
 
         update_running_total_object(detail_id, detail_price);
 
-        detail_price = detail_price ? detail_price * guest_count : 0;
+        detail_price = detail_price ? detail_price : 0;
 
         detail_price = Math.round(detail_price * 100) / 100;
 
         update_order_details( detail_id, detail_title, detail_content, detail_price, detail_parent, detail_parent_content );
 
         if( $detail.length ) {
-            let $price = $detail.find('.plated-meal-order-detail-price').html(currency_symbol + ' ' + detail_price).clone();
+            $detail.find('.plated-meal-order-detail-total-price').html(currency_symbol + ' ' + detail_price * guest_count);
+            $detail.find('.plated-meal-order-detail-item-price').html(currency_symbol + ' ' + detail_price);
+            $detail.find('.plated-meal-order-detail-guest-count').html( guest_count );
+            let $price = $detail.find('.plated-meal-order-detail-price');
+
             $detail.find('.plated-meal-order-detail-title').html(detail_title).append($price);
             $detail.find('.plated-meal-order-detail-content').html(detail_content);
 
@@ -77,20 +95,22 @@ jQuery(function($){
                 parent_answers.splice(index, 1);
             }
 
-            console.log('getting parent answers', parent_answers, detail_content );
+            // console.log('getting parent answers', parent_answers, detail_content );
 
             for ( let answer of parent_answers ) {
 
-                console.log('answer in parent_answers', answer, parent_answers );
+                // console.log('answer in parent_answers', answer, parent_answers );
 
                 for( let dependent_id in order_details_dependency[detail_id][answer] ) {
-                    $('#' + dependent_id).hide();
+                    $('#' + dependent_id).hide().addClass('hidden');
                 }
             }
 
             for( let dependent_id in order_details_dependency[detail_id][detail_content] ) {
-                $('#' + dependent_id).show();
+                $('#' + dependent_id).show().removeClass('hidden');
             }
+
+            update_product_price();
         }
 
         console.log( 'updated meal order details ', detail_id, detail_title, detail_content, detail_price, detail_parent, detail_parent_content );
@@ -124,7 +144,7 @@ jQuery(function($){
             order_details_dependency[detail_parent][detail_parent_content][detail_id] = detail_content;
         }
 
-        console.log( 'ORDER DETAILS', order_details, order_details_dependency    );
+        console.log( 'ORDER DETAILS', order_details, order_details_dependency );
     }
 
     function is_order_detail_parent( detail_id ) {
@@ -135,10 +155,13 @@ jQuery(function($){
     function update_product_price() {
         console.log(['RUNNING TOTAL OBJECT', running_total_object]);
         let price = sum(running_total_object);
+
+        price = get_sum_of_order_detail_prices() * guest_count;
+
         let $price_html = `<span class="woocommerce-Price-amount amount">
             <bdi>
                 <span class="woocommerce-Price-currencySymbol">
-                    ${tco_ttc_js.currency_symbol}
+                    ${currency_symbol}
                 </span>
                 ${price}
             </bdi>
@@ -150,7 +173,7 @@ jQuery(function($){
     let running_total_object = {};
 
     function update_running_total_object( price_id, price_per_guest ) {
-        running_total_object[price_id] = price_per_guest ? guest_count * price_per_guest : 0;
+        running_total_object[price_id] = price_per_guest ? price_per_guest : 0;
         update_product_price();
     }
 
@@ -164,6 +187,16 @@ jQuery(function($){
     $('#plated-number-of-guests input[type=number]').change(function () {
         update_plated_meal_order_details('plate-meal-guest-count', 'Number of Guests: ', $(this).val() );
         guest_count = $(this).val();
+        update_product_price();
+
+        $('.plated-meal-order-detail-guest-count').text(guest_count);
+        $('.plated-meal-order-detail-total-price').each(function() {
+
+            let item_price = get_num( $(this).prev().text() );
+            let total_price = guest_count * item_price;
+
+            $(this).html(currency_symbol + total_price );
+        });
     });
 
 
@@ -240,6 +273,7 @@ jQuery(function($){
     const $choose_desserts      = $('#plated-choose-desserts');
 
     let selected_meal_set = '';
+    let selected_meal_set_parts = {};
 
     $('input[name=plated_meal]').change(function(){
         // Update the product gallery image
@@ -251,6 +285,8 @@ jQuery(function($){
         add_to_meal_plates($(this).attr("id"));
 
         $('.wp-post-image').attr('src', img_src);
+
+        let previously_selected_meal_set = selected_meal_set;
 
         selected_meal_set = $plated_meal.val();
 
@@ -268,32 +304,78 @@ jQuery(function($){
         // get meal index from meal-item
         data.append( 'meal_index', $plated_meal.parent('.meal-item').data('meal_index') );
 
+        // Before retrieving the meal part contents, backup them up.
+        if( previously_selected_meal_set !== "" )
+        {
+            if( ! (previously_selected_meal_set in selected_meal_set_parts ) )
+                selected_meal_set_parts[previously_selected_meal_set] = {};
+
+            selected_meal_set_parts[previously_selected_meal_set] = {
+                choose_entrees: $choose_entrees.html(),
+                choose_hors_doeuvres: $choose_hors_doeuvres.html(),
+                choose_desserts: $choose_desserts.html()
+            };
+        }
 
         $choose_entrees.addClass('loading');
         $choose_hors_doeuvres.addClass('loading');
         $choose_desserts.addClass('loading');
-        jQuery.ajax({
-            url: tco_ttc_js.ajaxurl,
-            type: 'POST',
-            data: data,
-            cache: false,
-            dataType: 'json',
-            processData: false, // Don't process the files
-            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-            success: function (data, textStatus, jqXHR) {
-                console.log(['updating meal parts', data]);
 
-                $choose_entrees.html(data.entrees)
-                    .removeClass('loading');
-                $choose_hors_doeuvres.html(data.hors_doeuvres)
-                    .removeClass('loading');
-                $choose_desserts.html(data.desserts)
-                    .removeClass('loading');
+        console.log('Selected meal set parts', selected_meal_set_parts);
 
-                $choose_entrees.find('input[type=number]').attr('max', guest_count);
+        if( selected_meal_set in selected_meal_set_parts ) {
+            $choose_entrees.html( selected_meal_set_parts[selected_meal_set]['choose_entrees'] ).removeClass('loading');
+            $choose_hors_doeuvres.html( selected_meal_set_parts[selected_meal_set]['choose_hors_doeuvres'] ).removeClass('loading');
+            $choose_desserts.html( selected_meal_set_parts[selected_meal_set]['choose_desserts'] ).removeClass('loading');
 
-            }
-        });
+            // Populate values
+            let selected_meal_set_dependency = order_details_dependency['plate-meal-selected-meal-set'][selected_meal_set];
+            for( let meal_part_id in selected_meal_set_dependency ) {
+                let prefix = 'plate-meal-selected-meal-set-' + wpFeSanitizeTitle(selected_meal_set) + '-plate-meal-';
+
+                let meal_part = meal_part_id.replace(prefix, '');
+
+                console.log([prefix, meal_part]);
+                if(meal_part === 'selected-dessert') {
+                    console.log('[value="' + selected_meal_set_dependency[meal_part_id] + '"]', $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]'))
+                    $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]').prop('checked', true);
+                } else if (meal_part === 'selected-hors-doeuvres') {
+                    let selected_hors_doeuvres = selected_meal_set_dependency[meal_part_id].split(', ');
+                    console.log(selected_hors_doeuvres);
+                    for( let hors_doeuvre of selected_hors_doeuvres ) {
+                        console.log('[value="' + hors_doeuvre + '"]', $('[value="' + hors_doeuvre + '"]'));
+                        $('[value="' + hors_doeuvre + '"]').prop('checked', true);
+                    }
+                } else {
+                    console.log(meal_part, $('[name=' + meal_part + ']'));
+                    $('[name=' + meal_part + ']').val(selected_meal_set_dependency[meal_part_id]);
+                }
+        }
+
+        } else {
+            jQuery.ajax({
+                url: tco_ttc_js.ajaxurl,
+                type: 'POST',
+                data: data,
+                cache: false,
+                dataType: 'json',
+                processData: false, // Don't process the files
+                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                success: function (data, textStatus, jqXHR) {
+                    console.log(['updating meal parts', data]);
+
+                    $choose_entrees.html(data.entrees)
+                        .removeClass('loading');
+                    $choose_hors_doeuvres.html(data.hors_doeuvres)
+                        .removeClass('loading');
+                    $choose_desserts.html(data.desserts)
+                        .removeClass('loading');
+
+                    $choose_entrees.find('input[type=number]').attr('max', guest_count);
+
+                }
+            });
+        }
 
     });
 
@@ -345,6 +427,20 @@ jQuery(function($){
         sum = Math.round(sum * 100) / 100
         return sum;
     }
+
+    function get_sum_of_order_detail_prices() {
+        let sum = 0;
+        $('.plated-meal-order-detail:not(.hidden) .plated-meal-order-detail-item-price').each(function(){
+            sum += get_num( $(this).text() );
+        });
+
+        return sum;
+    }
+
+    function get_num(str) {
+        return parseFloat( str.replace( /^\D+/g, '') );
+    }
+
     // Update the max attribute of each guest plate field when one gets changed
     $choose_entrees.on('change', '.entree-number-of-guest-plates', function(){
         let total_plates_entered = 0;
@@ -517,7 +613,7 @@ jQuery(function($){
     function update_addon_time( id, title )
     {
         console.log('update_addon_time', addon_time_picker, id, title);
-        
+
         let hour    = addon_time_picker[id]['hour'];
         let minute  = addon_time_picker[id]['minute'];
         let ampm    = addon_time_picker[id]['ampm'];

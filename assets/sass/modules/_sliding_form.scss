@@ -5,24 +5,22 @@
   grid-template-areas:
           "slide"
           "nav";
-  grid-template-rows: calc(100vh - 4em);
 
   .slide {
     opacity: 0;
     pointer-events: none;
     grid-area: slide;
     overflow-y: auto;
-    display: flex;
     flex-flow: column;
     justify-content: flex-start;
-
+    display: none;
+    min-height: 70vh;
 
     &.active {
       opacity: 1;
       pointer-events: auto;
+      display: flex;
     }
-
-
 
   }
 
@@ -48,6 +46,10 @@
       color: white;
       margin-right: 10px;
       padding: 10px 25px;
+
+      &.slide-next {
+        margin-left: auto;
+      }
     }
   }
 }

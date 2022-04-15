@@ -1,4 +1,4 @@
-<div class="sliding-form" id="<?php echo $form_id ?>"
+<div class="sliding-form <?php echo $classes ?? '' ?> " id="<?php echo $form_id ?>"
     <?php foreach($data as $key=>$value): ?>
         data-<?php echo $key ?>="<?php echo $value?>"
     <?php endforeach; ?>

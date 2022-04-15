@@ -194,7 +194,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             $slides = array_merge($slides, $addon_slides, $notes_slides, $final_slides);
 
-            echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id], 'form_id' => 'plated_meal_form' ] );
+            echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id, 'validation' => 'inline'], 'form_id' => 'plated_meal_form' ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );
         }
 

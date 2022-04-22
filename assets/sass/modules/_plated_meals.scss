@@ -271,6 +271,7 @@ div#plated_meal_order_details {
   }
 }
 
+
 .addon {
   select {
     font-size: 18px;
@@ -286,19 +287,20 @@ div#plated_meal_order_details {
     left: 15px;
     font-size: 20px;
   }
-
-  .answer input~span:before {
-    content: "";
-    position: absolute;
-    height: 23px;
-    width: 23px;
-    top: 0;
-    left: -30px;
-    background: url(../img/unselected-circle.png);
-    background-size: contain
+  .answer input ~ span {
+    &:before {
+      content: '';
+      position: absolute;
+      height: 23px;
+      width: 23px;
+      top: 0;
+      left: -30px;
+      background: url(../img/unselected-circle.png);
+      background-size: contain;
+    }
   }
-
   .secondary-question {
+
     .answer input:checked ~ span {
       &:before {
         content: '';
@@ -317,7 +319,7 @@ div#plated_meal_order_details {
       padding-left: 25px;
       line-height: 1.2;
       font-size: 18px !important;
-      padding-right:25px
+      padding-right: 25px;
     }
 
     .answer input[name='select-your-signature-drink']:checked~span:before {
@@ -358,7 +360,7 @@ div#plated_meal_order_details {
 }
 
 #plated-addon-would-you-like-to-add-a-signature-drink .addon .secondary-question .answer input~span:before {
-  left: -9px
+  left: -9px;
 }
 
 .entree {

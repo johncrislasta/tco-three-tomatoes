@@ -1,8 +1,8 @@
 <?php
     $meal_title = sanitize_title( $meal['name'] );
 ?>
-<!--Number of entrees is decided by the number of plates added for each entree -->
-<!--<h3 class="entree-choice-header">Choice of --><?php //echo $meal['allowed_number_of_entrees'] ?><!-- Entrée</h3>-->
+Number of entrees is decided by the number of plates added for each entree
+<h3 class="entree-choice-header">Choice of <?php echo $meal['allowed_number_of_entrees'] ?> Entrée</h3>
 <div class="entree-choices-container choices" data-limit="<?php echo $meal['allowed_number_of_entrees'] ?>" data-price="<?php echo $meal['entrees_price'] ?>">
     <?php
     foreach( $meal['entree_choices'] as $entree ):

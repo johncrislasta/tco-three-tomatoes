@@ -153,9 +153,9 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 //            Acme::diep($addons);
             $slides = array(
                 array (
-                    'id'        => 'plated-number-of-guests',
-                    'header'    => 'How many guests?',
-                    'content'   => Acme::get_template('forms/catering/plated-01-number-of-guests'),
+                    'id'        => 'plated-basic-event-details',
+                    'header'    => 'Tell us about the event',
+                    'content'   => Acme::get_template('forms/catering/plated-01-basic-event-details'),
                 ),
                 array (
                     'id'        => 'plated-schedule-date-times',
@@ -194,7 +194,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             $slides = array_merge($slides, $addon_slides, $notes_slides, $final_slides);
 
-            echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id, 'validation' => 'inline'], 'form_id' => 'plated_meal_form' ] );
+            echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id, 'validation' => 'inline', 'validation-trigger' => '.slide-next, .slide-prev'], 'form_id' => 'plated_meal_form' ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );
         }
 

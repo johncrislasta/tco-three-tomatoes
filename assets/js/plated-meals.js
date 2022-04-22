@@ -110,8 +110,9 @@ jQuery(function($){
                 $('#' + dependent_id).show().removeClass('hidden');
             }
 
-            update_product_price();
         }
+
+        update_product_price();
 
         console.log( 'updated meal order details ', detail_id, detail_title, detail_content, detail_price, detail_parent, detail_parent_content );
     }
@@ -364,12 +365,20 @@ jQuery(function($){
                 success: function (data, textStatus, jqXHR) {
                     console.log(['updating meal parts', data]);
 
-                    $choose_entrees.html(data.entrees)
-                        .removeClass('loading');
-                    $choose_hors_doeuvres.html(data.hors_doeuvres)
-                        .removeClass('loading');
-                    $choose_desserts.html(data.desserts)
-                        .removeClass('loading');
+                    $choose_entrees
+                        .removeClass('loading')
+                        .find('.slide-content')
+                            .html(data.entrees);
+                    $choose_hors_doeuvres
+                        .removeClass('loading')
+                        .find('.slide-content')
+                            .html(data.hors_doeuvres)
+                    ;
+                    $choose_desserts
+                        .removeClass('loading')
+                        .find('.slide-content')
+                            .html(data.desserts)
+                    ;
 
                     $choose_entrees.find('input[type=number]').attr('max', guest_count);
 

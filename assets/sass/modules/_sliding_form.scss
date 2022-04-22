@@ -50,6 +50,12 @@
       &.slide-next {
         margin-left: auto;
       }
+
+      &[disabled] {
+        cursor: default;
+        pointer-events: none;
+        background: #ccc;
+      }
     }
   }
 }

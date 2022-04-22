@@ -1,25 +1,25 @@
 .meal-item {
 
-    padding: 1em;
-    border: 1px solid #309e9b;
-    background-color: #309e9b;
-    display: flex;
-    flex-direction: column;
-    border-radius: 6px;
-    position: relative;
-/*
-  > input[type=radio]:checked ~ .meal-image:before  {
-    content: "";
-    position: absolute;
-    height: 40px;
-    width: 40px;
-    top: -13px;
-    right: -10px;
-    background: url(../img/check-selected.png);
-    background-size: contain;
-    z-index: 5;
-  }
-*/
+  padding: 1em;
+  border: 1px solid #309e9b;
+  background-color: #309e9b;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  position: relative;
+  /*
+    > input[type=radio]:checked ~ .meal-image:before  {
+      content: "";
+      position: absolute;
+      height: 40px;
+      width: 40px;
+      top: -13px;
+      right: -10px;
+      background: url(../img/check-selected.png);
+      background-size: contain;
+      z-index: 5;
+    }
+  */
   > input[type=radio]:checked ~ p.meal-image:before  {
     content: "";
     position: absolute;
@@ -85,7 +85,7 @@
       font-weight: 500;
     }
     &-image {
-        margin: 0;
+      margin: 0;
       > img  {
         max-height: 215px;
         min-width: 215px;
@@ -168,13 +168,13 @@ div#plated_meal_order_details {
       display: flex;
       justify-content: space-between;
     }
-/*
-    &-content {
-      font-size: 20px;
-      color: #393939;
-      font-weight: 500;
-    }
-*/
+    /*
+        &-content {
+          font-size: 20px;
+          color: #393939;
+          font-weight: 500;
+        }
+    */
 
 
   }
@@ -286,6 +286,18 @@ div#plated_meal_order_details {
     left: 15px;
     font-size: 20px;
   }
+
+  .answer input~span:before {
+    content: "";
+    position: absolute;
+    height: 23px;
+    width: 23px;
+    top: 0;
+    left: -30px;
+    background: url(../img/unselected-circle.png);
+    background-size: contain
+  }
+
   .secondary-question {
     .answer input:checked ~ span {
       &:before {
@@ -299,12 +311,15 @@ div#plated_meal_order_details {
         background-size: contain;
       }
     }
+
     input[name="select-your-signature-drink"] ~ span {
       display: block;
       padding-left: 25px;
       line-height: 1.2;
       font-size: 18px !important;
+      padding-right:25px
     }
+
     .answer input[name='select-your-signature-drink']:checked~span:before {
       left: -10px;
     }
@@ -340,6 +355,10 @@ div#plated_meal_order_details {
 
   }
 
+}
+
+#plated-addon-would-you-like-to-add-a-signature-drink .addon .secondary-question .answer input~span:before {
+  left: -9px
 }
 
 .entree {
@@ -461,4 +480,9 @@ div#plated_meal_order_details {
 div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
   position: relative;
   left: 35px;
+}
+
+input[type=text].other-input {
+  display: none;
+  width: 100%;
 }

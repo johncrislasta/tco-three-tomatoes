@@ -150,12 +150,25 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 }
             }
 
+            // Get venues and occasion terms
+            $args = array('post_type' => 'catering','number' => '999');
+            $venues = get_terms( 'venue',
+                [
+                    'hide_empty' => false,
+                ] + $args );
+            $occasions = get_terms( 'occasion',
+                [
+                    'hide_empty' => false,
+                ] + $args );
+
+
+
 //            Acme::diep($addons);
             $slides = array(
                 array (
                     'id'        => 'plated-basic-event-details',
                     'header'    => 'Tell us about the event',
-                    'content'   => Acme::get_template('forms/catering/plated-01-basic-event-details'),
+                    'content'   => Acme::get_template('forms/catering/plated-01-basic-event-details', array( 'venues' => $venues, 'occasions' => $occasions ) ),
                 ),
                 array (
                     'id'        => 'plated-schedule-date-times',

@@ -182,10 +182,22 @@ jQuery(function($){
     let guest_count;
 
     // ------------------------------- //
+    // UX for Venue and Occasion
+    // ------------------------------- //
+
+    $('#occasion-select, #venue-select').change(function(){
+        if( $(this).val() === 'other' ) {
+            $(this).next('.other-input').show();
+        } else {
+            $(this).next('.other-input').hide();
+        }
+    })
+    
+    // ------------------------------- //
     // Update Guest Count Detail
     // ------------------------------- //
 
-    $('#plated-number-of-guests input[type=number]').change(function () {
+    $('#number-guest-input[type=number]').change(function () {
         update_plated_meal_order_details('plate-meal-guest-count', 'Number of Guests: ', $(this).val() );
         guest_count = $(this).val();
         update_product_price();

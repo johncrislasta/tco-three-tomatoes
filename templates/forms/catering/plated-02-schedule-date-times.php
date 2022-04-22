@@ -42,8 +42,7 @@
         </select>
     </div>
 
-    <input type="hidden" name="catering_option" value="Plated"/>
-
-
+    <strong>Event Scheduling</strong><br>
+    If you need an event sooner than available please call us at <a href="tel:303-433-3332">303-433-3332</a>. Events are structured to be 12 hours.&nbsp;If you need us for more than 12 hours please call.
 
 </div>

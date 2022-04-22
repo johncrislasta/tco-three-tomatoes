@@ -71,11 +71,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Front' ) ) {
 
                 ));
 
+            wp_enqueue_script('tco_ttc_form_validation', TTC_ASSETS . 'js/form-validation.js', array('jquery'), '', true);
             wp_enqueue_script('tco_ttc_slider_form', TTC_ASSETS . 'js/slider-form.js', array('jquery'), '', true);
             wp_enqueue_script('tco_ttc_plated_meals', TTC_ASSETS . 'js/plated-meals.js', array('jquery'), '', true);
 
             wp_enqueue_style('tco_ttc_vendor_datepicker_css', TTC_ASSETS . 'vendor/datepicker/css/datepicker.material.css', false, TTC_VERSION);
             wp_enqueue_script('tco_ttc_vendor_datepicker_js', TTC_ASSETS . 'vendor/datepicker/js/datepicker.js', array('jquery'), '', true);
+            wp_enqueue_script('tco_ttc_vendor_sanitize_title_js', TTC_ASSETS . 'vendor/wp-fe-sanitize-title.js', array(), '', true);
         }
 
     }

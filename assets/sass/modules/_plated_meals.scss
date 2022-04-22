@@ -8,14 +8,14 @@
     border-radius: 6px;
     position: relative;
 
-  > input[type=radio]:checked ~ p:before  {
+  > input[type=radio]:checked ~ .meal-image:before  {
     content: "";
     position: absolute;
-    height: 23px;
-    width: 23px;
-    top: 0;
-    right: 0;
-    background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+    height: 40px;
+    width: 40px;
+    top: -13px;
+    right: -10px;
+    background: url(../img/check-selected.png);
     background-size: contain;
     z-index: 5;
   }
@@ -252,9 +252,18 @@ div#plated_meal_order_details {
         width: 23px;
         top: 0;
         left: -30px;
-        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+        background: url(../img/check-selected.png);
         background-size: contain;
       }
+    }
+    input[name="select-your-signature-drink"] ~ span {
+      display: block;
+      padding-left: 25px;
+      line-height: 1.2;
+      font-size: 18px !important;
+    }
+    .answer input[name='select-your-signature-drink']:checked~span:before {
+      left: -10px;
     }
   }
   .answer:nth-child(3) {
@@ -268,7 +277,7 @@ div#plated_meal_order_details {
       width: 23px;
       top: 0;
       left: -30px;
-      background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+      background: url(../img/check-selected.png);
       background-size: contain;
     }
 
@@ -282,7 +291,7 @@ div#plated_meal_order_details {
       width: 23px;
       top: 0;
       left: -30px;
-      background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/close-circle.png);
+      background: url(../img/close-circle.png);
       background-size: contain;
     }
 
@@ -336,7 +345,7 @@ div#plated_meal_order_details {
         width: 40px;
         top: -13px;
         right: -10px;
-        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+        background: url(../img/check-selected.png);
         z-index: 5;
         background-size: contain;
       }
@@ -373,7 +382,7 @@ div#plated_meal_order_details {
         width: 40px;
         top: -13px;
         right: -10px;
-        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+        background: url(../img/check-selected.png);
         z-index: 5;
         background-size: contain;
       }
@@ -403,4 +412,10 @@ div#plated_meal_order_details {
     font-weight: 600;
     line-height: 1;
   }
+}
+
+
+div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
+  position: relative;
+  left: 35px;
 }

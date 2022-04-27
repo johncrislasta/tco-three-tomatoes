@@ -1,7 +1,6 @@
 <div id="catering_details" class="booking-details">
-    <input type="hidden" id="catering_calendar" data-inline="true"
-           data-without="[<?php echo join(',', \TCo_Three_Tomatoes\Bookables::get_fully_booked_dates())?>]">
-    <!-- data-without="[2/13/2016,2/14/2016,2/17/2016]" -->
+    <input type="text" id="catering_datepicker" data-inline="true" name="catering_date"
+           data-disable='<?php echo json_encode($disabled_dates) ?>'>
 
     <div id="guest_arrival_time">
         <label>Guest Arrival Time</label>

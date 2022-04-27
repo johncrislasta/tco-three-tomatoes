@@ -192,7 +192,7 @@ jQuery(function($){
             $(this).next('.other-input').hide();
         }
     })
-    
+
     // ------------------------------- //
     // Update Guest Count Detail
     // ------------------------------- //
@@ -217,9 +217,28 @@ jQuery(function($){
     // Update Delivery Date
     // ------------------------------- //
 
-    document.addEventListener("catering_date_chosen", function(e) {
-        update_plated_meal_order_details('plate-meal-delivery-date', 'Delivery Date: ', e.detail );
-    });
+    const $catering_datepicker = $('#catering_datepicker');
+
+    let catering_date = new Date();
+    catering_date.setDate(catering_date.getDate() + parseInt(tco_ttc_js.settings.catering.allowed_days_in_advance));
+    console.log($catering_datepicker.data('disable'));
+    let catering_disabled_dates = $catering_datepicker.data('disable');
+
+    const catering_datepicker_options = {
+        dateFormat: "Y-m-d",
+        inline: true,
+        minDate: catering_date,
+        defaultDate: catering_date,
+        disable: catering_disabled_dates,
+        onChange: function(selectedDates, dateStr, instance) {
+            console.log('catering flatpickr onchange listener', selectedDates, dateStr);
+            update_plated_meal_order_details('plate-meal-event-date', 'Event Date: ', dateStr );
+            store_progress('catering_datepicker', dateStr);
+        },
+    };
+    const catering_flatpickr = flatpickr("#catering_datepicker", catering_datepicker_options); // flatpickr
+
+    console.log(['catering_datepicker_options', catering_datepicker_options]);
 
     // ------------------------------- //
     // Update Guest Arrival Time
@@ -342,28 +361,32 @@ jQuery(function($){
             $choose_desserts.html( selected_meal_set_parts[selected_meal_set]['choose_desserts'] ).removeClass('loading');
 
             // Populate values
-            let selected_meal_set_dependency = order_details_dependency['plate-meal-selected-meal-set'][selected_meal_set];
-            for( let meal_part_id in selected_meal_set_dependency ) {
-                let prefix = 'plate-meal-selected-meal-set-' + wpFeSanitizeTitle(selected_meal_set) + '-plate-meal-';
+            console.log(order_details_dependency);
 
-                let meal_part = meal_part_id.replace(prefix, '');
+            if(order_details_dependency.length) {
+                let selected_meal_set_dependency = order_details_dependency['plate-meal-selected-meal-set'][selected_meal_set];
+                for( let meal_part_id in selected_meal_set_dependency ) {
+                    let prefix = 'plate-meal-selected-meal-set-' + wpFeSanitizeTitle(selected_meal_set) + '-plate-meal-';
 
-                console.log([prefix, meal_part]);
-                if(meal_part === 'selected-dessert') {
-                    console.log('[value="' + selected_meal_set_dependency[meal_part_id] + '"]', $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]'))
-                    $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]').prop('checked', true);
-                } else if (meal_part === 'selected-hors-doeuvres') {
-                    let selected_hors_doeuvres = selected_meal_set_dependency[meal_part_id].split(', ');
-                    console.log(selected_hors_doeuvres);
-                    for( let hors_doeuvre of selected_hors_doeuvres ) {
-                        console.log('[value="' + hors_doeuvre + '"]', $('[value="' + hors_doeuvre + '"]'));
-                        $('[value="' + hors_doeuvre + '"]').prop('checked', true);
+                    let meal_part = meal_part_id.replace(prefix, '');
+
+                    console.log([prefix, meal_part]);
+                    if(meal_part === 'selected-dessert') {
+                        console.log('[value="' + selected_meal_set_dependency[meal_part_id] + '"]', $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]'))
+                        $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]').prop('checked', true);
+                    } else if (meal_part === 'selected-hors-doeuvres') {
+                        let selected_hors_doeuvres = selected_meal_set_dependency[meal_part_id].split(', ');
+                        console.log(selected_hors_doeuvres);
+                        for( let hors_doeuvre of selected_hors_doeuvres ) {
+                            console.log('[value="' + hors_doeuvre + '"]', $('[value="' + hors_doeuvre + '"]'));
+                            $('[value="' + hors_doeuvre + '"]').prop('checked', true);
+                        }
+                    } else {
+                        console.log(meal_part, $('[name=' + meal_part + ']'));
+                        $('[name=' + meal_part + ']').val(selected_meal_set_dependency[meal_part_id]);
                     }
-                } else {
-                    console.log(meal_part, $('[name=' + meal_part + ']'));
-                    $('[name=' + meal_part + ']').val(selected_meal_set_dependency[meal_part_id]);
                 }
-        }
+            }
 
         } else {
             jQuery.ajax({
@@ -380,16 +403,16 @@ jQuery(function($){
                     $choose_entrees
                         .removeClass('loading')
                         .find('.slide-content')
-                            .html(data.entrees);
+                        .html(data.entrees);
                     $choose_hors_doeuvres
                         .removeClass('loading')
                         .find('.slide-content')
-                            .html(data.hors_doeuvres)
+                        .html(data.hors_doeuvres)
                     ;
                     $choose_desserts
                         .removeClass('loading')
                         .find('.slide-content')
-                            .html(data.desserts)
+                        .html(data.desserts)
                     ;
 
                     $choose_entrees.find('input[type=number]').attr('max', guest_count);
@@ -688,4 +711,55 @@ jQuery(function($){
     })
 
 
+    // Store progress in localStorage
+
+    let plated_meal_progress = {};
+
+    if( localStorage.plated_meal_order ){
+        if( confirm("We see that you have an order that's in progress, we can load it for you or you can press Cancel to create a new one.") ) {
+            plated_meal_progress = JSON.parse( localStorage.getItem('plated_meal_order') );
+            retrieve_progress();
+        }
+    }
+
+    $('#plated_meal_form').on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=hidden], textarea', function() {
+        plated_meal_progress[$(this).attr('name')] = $(this).val();
+        console.log(['PLATED MEAL PROGRESS', plated_meal_progress]);
+    });
+
+    function store_progress(name, value) {
+        plated_meal_progress[name] = value;
+        console.log(['PLATED MEAL PROGRESS', plated_meal_progress]);
+    }
+
+    function retrieve_progress() {
+        console.log(['PLATED MEAL PROGRESS', plated_meal_progress]);
+        for( const field in plated_meal_progress ) {
+            let value = plated_meal_progress[field];
+
+            let $field = $(`[name=${field}]`);
+
+            if($field.is('input[type=radio]'))
+                $(`[name=${field}][value="${value}"]`).click();
+
+            else if(field === 'catering_date')
+            {
+                console.log('field is Catering Date from flatpickr', catering_flatpickr);
+                let catering_date = new Date(value);
+
+                catering_flatpickr.setDate(catering_date, true);
+            }
+            else
+            {
+                $field.val(value).change();
+            }
+        }
+    }
+
+    // store progress in localStorage before closing tab
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+
+        localStorage.setItem('plated_meal_order', JSON.stringify(plated_meal_progress));
+    });
 });

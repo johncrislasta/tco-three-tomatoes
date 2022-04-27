@@ -1,3 +1,4 @@
+var catering_calendar;
 jQuery(function($){
 
     console.log(tco_ttc_js);
@@ -33,12 +34,21 @@ jQuery(function($){
             var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             // date = date.toLocaleDateString("en-US", options);
 
-            var event = new CustomEvent("catering_date_chosen", { "detail": date.toLocaleString('en-US', options) });
+            if ( date ) {
+                console.log('datepicker onChange', date);
+                var event = new CustomEvent("catering_date_chosen", { "detail": date });
+            } else {
+                var event = new CustomEvent("catering_date_chosen", { "detail": new Date() });
+            }
+
 
             // Dispatch/Trigger/Fire the event
             document.dispatchEvent(event);
         })
     });
+
+    // catering_calendar.setDate(Date('May 15, 2022'));
+    console.log('Catering calendar: ', catering_calendar);
 
     for(let wt in tco_ttc_js.settings.delivery.window_times) {
         let window_time = tco_ttc_js.settings.delivery.window_times[wt];

@@ -69,11 +69,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookables' ) ) {
         }
 
         public static function get_fully_booked_dates($format = "m/d/Y") {
+//            die('get_fully_booked_dates format: ' . $format);
+
             $bookings_limit = TTC_Settings()->general['limit_number_of_bookings_per_day'];
 
 
             if( empty( $bookings_limit ) || $bookings_limit <= 1 )
-                return self::get_upcoming_dates([Catering::$post_type, Delivery::$post_type, Reservation::$post_type]);
+                return self::get_upcoming_dates([Catering::$post_type, Delivery::$post_type, Reservation::$post_type], $format);
 
             // Either loop through the dates OR do a DB Query
             global $wpdb;

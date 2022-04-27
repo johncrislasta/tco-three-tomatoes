@@ -13,6 +13,12 @@ jQuery(function($){
             .next('.slide').attr('class', 'slide active slide-in-right');
 
         $active_slide = $new_active_slide;
+
+        // check if current slide is the last slide
+        if( $new_active_slide.next('.slide').length === 0 )
+            $new_active_slide.parent().addClass('last-slide');
+        else
+            $new_active_slide.parent().removeClass('last-slide');
     });
 
     $slider_prev.click(function(){

@@ -478,13 +478,35 @@ div#plated_meal_order_details {
   }
 }
 
+#plated_meal_form {
+  + form.cart {
+    display: none;
 
-div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
-  position: relative;
-  left: 35px;
-}
+    button {
+      display: none;
+      pointer-events: none;
+    }
+  }
 
-input[type=text].other-input {
-  display: none;
-  width: 100%;
+  &.last-slide {
+    + form.cart {
+      display: block;
+
+      button {
+        display: inline-block;
+        pointer-events: auto;
+      }
+    }
+  }
+
+
+  div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
+    position: relative;
+    left: 35px;
+  }
+
+  input[type=text].other-input {
+    display: none;
+    width: 100%;
+  }
 }

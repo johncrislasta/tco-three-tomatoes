@@ -183,17 +183,17 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 array (
                     'id'        => 'plated-choose-entrees',
                     'header'    => 'Choose Entrees:',
-                    'content'   => Acme::get_template('forms/catering/plated-03-1-choose-entrees', array( 'meal' => $meals_fields[0] ) ),
+                    'content'   => Acme::get_template('forms/catering/plated-03-1-choose-entrees', array( 'meal' => false ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-hors-doeuvres',
                     'header'    => 'Choose Hors D\'oeuvres:',
-                    'content'   => Acme::get_template('forms/catering/plated-03-2-choose-hors-doeuvres', array( 'meal' => $meals_fields[0] ) ),
+                    'content'   => Acme::get_template('forms/catering/plated-03-2-choose-hors-doeuvres', array( 'meal' => false ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-desserts',
                     'header'    => 'Choose Desserts:',
-                    'content'   => Acme::get_template('forms/catering/plated-03-3-choose-desserts', array( 'meal' => $meals_fields[0] ) ),
+                    'content'   => Acme::get_template('forms/catering/plated-03-3-choose-desserts', array( 'meal' => false ) ),
                 ),
             );
 

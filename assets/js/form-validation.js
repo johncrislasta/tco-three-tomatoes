@@ -31,10 +31,22 @@ jQuery(function($){
 
         $field.removeClass('validation-failed' );
 
-        if( $field.val() === '') {
-            $required_error_msg.show();
-            $field.addClass('validation-failed' );
-            return false;
+        // if field is radio button, look for checked
+        if( $field.is('[type=radio]') ) {
+            if( $(`input[name=${$field.attr('name')}]:checked`).length === 0 ) {
+                $required_error_msg.show();
+                $field.addClass('validation-failed' );
+                return false;
+            }
+        }
+        else
+        {
+            // if field is text
+            if( $field.val() === '') {
+                $required_error_msg.show();
+                $field.addClass('validation-failed' );
+                return false;
+            }
         }
         return true;
     }
@@ -54,12 +66,14 @@ jQuery(function($){
         let validation_failed_fields = [];
 
         // validate required
-        $form.find('[required]').each(function (){
+        // TODO: Decouple the slide class
+        $form.find('.slide.active [required]').each(function (){
+            if( ! $(this).is(":visible") ) return;
             if( ! validate_required( $(this) ) )
                 validation_failed_fields.push($(this).attr('name'));
         });
 
-        console.log(validation_failed_fields);
+        console.log('validating fields' , validation_failed_fields);
         // check if there are failed validations
         if( validation_failed_fields.length > 0 ) {
             event.stopImmediatePropagation();

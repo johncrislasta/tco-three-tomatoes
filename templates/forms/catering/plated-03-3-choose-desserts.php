@@ -1,4 +1,6 @@
 <?php
+if($meal):
+
 $meal_title = sanitize_title( $meal['name'] );
 ?>
 
@@ -38,3 +40,9 @@ $meal_title = sanitize_title( $meal['name'] );
     endforeach;
     ?>
 </div>
+
+<?php
+else:
+echo "<h3>Please select a Meal Set from the previous slide. Thanks! </h3>";
+endif;
+?>

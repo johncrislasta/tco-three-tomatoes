@@ -175,7 +175,7 @@ jQuery(function($){
 
     function update_running_total_object( price_id, price_per_guest ) {
         running_total_object[price_id] = price_per_guest ? price_per_guest : 0;
-        update_product_price();
+        // update_product_price();
     }
 
     // Running plated meal order calculation
@@ -231,8 +231,9 @@ jQuery(function($){
         defaultDate: catering_date,
         disable: catering_disabled_dates,
         onChange: function(selectedDates, dateStr, instance) {
-            console.log('catering flatpickr onchange listener', selectedDates, dateStr);
-            update_plated_meal_order_details('plate-meal-event-date', 'Event Date: ', dateStr );
+            // console.log('catering flatpickr onchange listener', selectedDates, dateStr);
+            // hide details for fields not affecting the pricing
+            // update_plated_meal_order_details('plate-meal-event-date', 'Event Date: ', dateStr );
             store_progress('catering_datepicker', dateStr);
         },
     };
@@ -265,7 +266,8 @@ jQuery(function($){
     function update_guest_arrival_time()
     {
         guest_arrival_time = `${guest_arrival_hour}:${guest_arrival_minute} ${guest_arrival_ampm}`;
-        update_plated_meal_order_details('plate-meal-guest-arrival-time', 'Time guests arrive: ', guest_arrival_time );
+        // update_plated_meal_order_details('plate-meal-guest-arrival-time', 'Time guests arrive: ', guest_arrival_time );
+        store_progress('plate_meal_guest_arrival_time', guest_arrival_time);
     }
 
     // ------------------------------- //
@@ -293,7 +295,9 @@ jQuery(function($){
     function update_guest_departure_time()
     {
         guest_departure_time = `${guest_departure_hour}:${guest_departure_minute} ${guest_departure_ampm}`;
-        update_plated_meal_order_details('plate-meal-guest-departure-time', 'Time guests depart: ', guest_departure_time );
+        // update_plated_meal_order_details('plate-meal-guest-departure-time', 'Time guests depart: ', guest_departure_time );
+        store_progress('plate_meal_guest_departure_time', guest_departure_time );
+
     }
 
     // ------------------------------- //
@@ -322,7 +326,7 @@ jQuery(function($){
 
         selected_meal_set = $plated_meal.val();
 
-        console.log( 'meal selected ' + selected_meal_set );
+        console.log( {'meal selected': selected_meal_set, 'previously selected meal set' : previously_selected_meal_set} );
 
         update_plated_meal_order_details('plate-meal-selected-meal-set', 'Selected Meal Set: ', selected_meal_set, $plated_meal.data('price'), true );
 
@@ -416,6 +420,36 @@ jQuery(function($){
                     ;
 
                     $choose_entrees.find('input[type=number]').attr('max', guest_count);
+
+                    $choose_entrees.find('input[type=number]').each(function(){
+                        let input_name = $(this).attr('name');
+                        if( input_name in plated_meal_progress ) {
+                            $(this).val( plated_meal_progress[input_name] ).change();
+                        }
+                    });
+
+
+                    $choose_hors_doeuvres.find('input').each(function(){
+                        let input_name = $(this).attr('name');
+
+                        if( plated_meal_progress[input_name] === undefined ) return;
+
+                        // TODO: check if plated meal progress input name is iterable
+                        if( plated_meal_progress[input_name].indexOf( $(this).val() )  > -1 )
+                            $(this).click();
+
+                    });
+
+                    $choose_desserts.find('input').each(function(){
+                        let input_name = $(this).attr('name');
+
+                        if( plated_meal_progress[input_name] === undefined ) return;
+
+                        // TODO: check if plated meal progress input name is iterable
+                        if( plated_meal_progress[input_name] === $(this).val() )
+                            $(this).click();
+
+                    })
 
                 }
             });
@@ -722,18 +756,39 @@ jQuery(function($){
         }
     }
 
-    $('#plated_meal_form').on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=hidden], textarea', function() {
-        plated_meal_progress[$(this).attr('name')] = $(this).val();
-        console.log(['PLATED MEAL PROGRESS', plated_meal_progress]);
+    $('#plated_meal_form').on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
+
+        let input_name = $(this).attr('name');
+
+        // if checkbox, store in an array
+        if( $(this).is('input[type=checkbox]') ) {
+
+            if( plated_meal_progress[input_name] === undefined  ) {
+                console.log('setting up array for plated meal progress ' + input_name );
+                plated_meal_progress[input_name] = [];
+            }
+
+            if( $(this).is(':checked') ) {
+                plated_meal_progress[input_name].push( $(this).val() );
+            } else {
+                const index = plated_meal_progress[input_name].indexOf( $(this).val() );
+                if (index > -1) {
+                    plated_meal_progress[input_name].splice(index, 1);
+                }
+            }
+        }
+        else
+            plated_meal_progress[input_name] = $(this).val();
+        console.log(['PLATED MEAL PROGRESS from changed fields', plated_meal_progress]);
     });
 
     function store_progress(name, value) {
         plated_meal_progress[name] = value;
-        console.log(['PLATED MEAL PROGRESS', plated_meal_progress]);
+        console.log(['PLATED MEAL PROGRESS from storing', plated_meal_progress]);
     }
 
     function retrieve_progress() {
-        console.log(['PLATED MEAL PROGRESS', plated_meal_progress]);
+        console.log(['PLATED MEAL PROGRESS from retrieving', plated_meal_progress]);
         for( const field in plated_meal_progress ) {
             let value = plated_meal_progress[field];
 
@@ -741,6 +796,12 @@ jQuery(function($){
 
             if($field.is('input[type=radio]'))
                 $(`[name=${field}][value="${value}"]`).click();
+            else if( $field.is('input[type=checkbox]' ) ) {
+                for ( const checkbox_value of value ) {
+                    console.log(`[name=${field}][value="${checkbox_value}"]`);
+                    $(`[name=${field}][value="${checkbox_value}"]`).click();
+                }
+            }
 
             else if(field === 'catering_date')
             {

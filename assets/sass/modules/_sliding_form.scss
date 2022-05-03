@@ -7,23 +7,23 @@
           "nav";
 
   .slide {
-    opacity: 0;
-    pointer-events: none;
-    grid-area: slide;
-    overflow-y: auto;
-    flex-flow: column;
-    justify-content: flex-start;
-    display: none;
-    min-height: 70vh;
-    overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      grid-area: slide;
+      overflow-y: auto;
+      flex-flow: column;
+      justify-content: flex-start;
+      display: none;
+      min-height: 70vh;
+      overflow: hidden;
 
-    &.active {
-      opacity: 1;
-      pointer-events: auto;
-      display: flex;
+      &.active {
+        opacity: 1;
+        pointer-events: auto;
+        display: flex;
+      }
+
     }
-
-  }
 
   // Hide prev button if first slide is active
   .slide.active:first-of-type ~ .slider-nav-buttons .slide-prev {

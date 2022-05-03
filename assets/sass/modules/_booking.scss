@@ -106,6 +106,16 @@
 
 }
 
-input#number-guest-input {
+#number-guest-input,#venue-other,#occasion-select {
   font-size: 18px;
+}
+#venue-select {
+  font-size: 18px;
+  max-width: 100%;
+}
+input#catering_datepicker {
+  display: none;
+}
+.flatpickr-calendar.open, .flatpickr-calendar.inline {
+  width: 100%;
 }

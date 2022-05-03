@@ -150,17 +150,30 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 }
             }
 
+            // Get venues and occasion terms
+            $args = array('post_type' => 'catering','number' => '999');
+            $venues = get_terms( 'venue',
+                [
+                    'hide_empty' => false,
+                ] + $args );
+            $occasions = get_terms( 'occasion',
+                [
+                    'hide_empty' => false,
+                ] + $args );
+
+
+
 //            Acme::diep($addons);
             $slides = array(
                 array (
                     'id'        => 'plated-basic-event-details',
                     'header'    => 'Tell us about the event',
-                    'content'   => Acme::get_template('forms/catering/plated-01-basic-event-details'),
+                    'content'   => Acme::get_template('forms/catering/plated-01-basic-event-details', array( 'venues' => $venues, 'occasions' => $occasions ) ),
                 ),
                 array (
                     'id'        => 'plated-schedule-date-times',
                     'header'    => 'When do you need it?',
-                    'content'   => Acme::get_template('forms/catering/plated-02-schedule-date-times'),
+                    'content'   => Acme::get_template('forms/catering/plated-02-schedule-date-times', array( 'disabled_dates' => Bookables::get_fully_booked_dates('Y-m-d' ) ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-meal-set',
@@ -170,17 +183,17 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 array (
                     'id'        => 'plated-choose-entrees',
                     'header'    => 'Choose Entrees:',
-                    'content'   => Acme::get_template('forms/catering/plated-03-1-choose-entrees', array( 'meal' => $meals_fields[0] ) ),
+                    'content'   => Acme::get_template('forms/catering/plated-03-1-choose-entrees', array( 'meal' => false ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-hors-doeuvres',
                     'header'    => 'Choose Hors D\'oeuvres:',
-                    'content'   => Acme::get_template('forms/catering/plated-03-2-choose-hors-doeuvres', array( 'meal' => $meals_fields[0] ) ),
+                    'content'   => Acme::get_template('forms/catering/plated-03-2-choose-hors-doeuvres', array( 'meal' => false ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-desserts',
                     'header'    => 'Choose Desserts:',
-                    'content'   => Acme::get_template('forms/catering/plated-03-3-choose-desserts', array( 'meal' => $meals_fields[0] ) ),
+                    'content'   => Acme::get_template('forms/catering/plated-03-3-choose-desserts', array( 'meal' => false ) ),
                 ),
             );
 
@@ -193,6 +206,11 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             );
 
             $slides = array_merge($slides, $addon_slides, $notes_slides, $final_slides);
+
+            // Remove Add To Cart
+            remove_action( 'woocommerce_simple_add_to_cart', 'woocommerce_simple_add_to_cart', 30 );
+            remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+
 
             echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id, 'validation' => 'inline', 'validation-trigger' => '.slide-next, .slide-prev'], 'form_id' => 'plated_meal_form' ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );

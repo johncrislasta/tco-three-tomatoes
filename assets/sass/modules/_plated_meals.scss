@@ -1,25 +1,25 @@
 .meal-item {
 
-    padding: 1em;
-    border: 1px solid #309e9b;
-    background-color: #309e9b;
-    display: flex;
-    flex-direction: column;
-    border-radius: 6px;
-    position: relative;
-/*
-  > input[type=radio]:checked ~ .meal-image:before  {
-    content: "";
-    position: absolute;
-    height: 40px;
-    width: 40px;
-    top: -13px;
-    right: -10px;
-    background: url(../img/check-selected.png);
-    background-size: contain;
-    z-index: 5;
-  }
-*/
+  padding: 1em;
+  border: 1px solid #309e9b;
+  background-color: #309e9b;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6px;
+  position: relative;
+  /*
+    > input[type=radio]:checked ~ .meal-image:before  {
+      content: "";
+      position: absolute;
+      height: 40px;
+      width: 40px;
+      top: -13px;
+      right: -10px;
+      background: url(../img/check-selected.png);
+      background-size: contain;
+      z-index: 5;
+    }
+  */
   > input[type=radio]:checked ~ p.meal-image:before  {
     content: "";
     position: absolute;
@@ -85,7 +85,7 @@
       font-weight: 500;
     }
     &-image {
-        margin: 0;
+      margin: 0;
       > img  {
         max-height: 215px;
         min-width: 215px;
@@ -168,13 +168,13 @@ div#plated_meal_order_details {
       display: flex;
       justify-content: space-between;
     }
-/*
-    &-content {
-      font-size: 20px;
-      color: #393939;
-      font-weight: 500;
-    }
-*/
+    /*
+        &-content {
+          font-size: 20px;
+          color: #393939;
+          font-weight: 500;
+        }
+    */
 
 
   }
@@ -313,6 +313,7 @@ div#plated_meal_order_details {
         background-size: contain;
       }
     }
+
     input[name="select-your-signature-drink"] ~ span {
       display: block;
       padding-left: 25px;
@@ -320,6 +321,7 @@ div#plated_meal_order_details {
       font-size: 18px !important;
       padding-right: 25px;
     }
+
     .answer input[name='select-your-signature-drink']:checked~span:before {
       left: -10px;
     }
@@ -476,8 +478,35 @@ div#plated_meal_order_details {
   }
 }
 
+#plated_meal_form {
+  + form.cart {
+    display: none;
 
-div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
-  position: relative;
-  left: 35px;
+    button {
+      display: none;
+      pointer-events: none;
+    }
+  }
+
+  &.last-slide {
+    + form.cart {
+      display: block;
+
+      button {
+        display: inline-block;
+        pointer-events: auto;
+      }
+    }
+  }
+
+
+  div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
+    position: relative;
+    left: 35px;
+  }
+
+  input[type=text].other-input {
+    display: none;
+    width: 100%;
+  }
 }

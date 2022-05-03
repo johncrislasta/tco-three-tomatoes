@@ -175,17 +175,29 @@ jQuery(function($){
 
     function update_running_total_object( price_id, price_per_guest ) {
         running_total_object[price_id] = price_per_guest ? price_per_guest : 0;
-        update_product_price();
+        // update_product_price();
     }
 
     // Running plated meal order calculation
     let guest_count;
 
     // ------------------------------- //
+    // UX for Venue and Occasion
+    // ------------------------------- //
+
+    $('#occasion-select, #venue-select').change(function(){
+        if( $(this).val() === 'other' ) {
+            $(this).next('.other-input').show();
+        } else {
+            $(this).next('.other-input').hide();
+        }
+    })
+
+    // ------------------------------- //
     // Update Guest Count Detail
     // ------------------------------- //
 
-    $('#plated-number-of-guests input[type=number]').change(function () {
+    $('#number-guest-input[type=number]').change(function () {
         update_plated_meal_order_details('plate-meal-guest-count', 'Number of Guests: ', $(this).val() );
         guest_count = $(this).val();
         update_product_price();
@@ -205,9 +217,29 @@ jQuery(function($){
     // Update Delivery Date
     // ------------------------------- //
 
-    document.addEventListener("catering_date_chosen", function(e) {
-        update_plated_meal_order_details('plate-meal-delivery-date', 'Delivery Date: ', e.detail );
-    });
+    const $catering_datepicker = $('#catering_datepicker');
+
+    let catering_date = new Date();
+    catering_date.setDate(catering_date.getDate() + parseInt(tco_ttc_js.settings.catering.allowed_days_in_advance));
+    console.log($catering_datepicker.data('disable'));
+    let catering_disabled_dates = $catering_datepicker.data('disable');
+
+    const catering_datepicker_options = {
+        dateFormat: "Y-m-d",
+        inline: true,
+        minDate: catering_date,
+        defaultDate: catering_date,
+        disable: catering_disabled_dates,
+        onChange: function(selectedDates, dateStr, instance) {
+            // console.log('catering flatpickr onchange listener', selectedDates, dateStr);
+            // hide details for fields not affecting the pricing
+            // update_plated_meal_order_details('plate-meal-event-date', 'Event Date: ', dateStr );
+            store_progress('catering_datepicker', dateStr);
+        },
+    };
+    const catering_flatpickr = flatpickr("#catering_datepicker", catering_datepicker_options); // flatpickr
+
+    console.log(['catering_datepicker_options', catering_datepicker_options]);
 
     // ------------------------------- //
     // Update Guest Arrival Time
@@ -234,7 +266,8 @@ jQuery(function($){
     function update_guest_arrival_time()
     {
         guest_arrival_time = `${guest_arrival_hour}:${guest_arrival_minute} ${guest_arrival_ampm}`;
-        update_plated_meal_order_details('plate-meal-guest-arrival-time', 'Time guests arrive: ', guest_arrival_time );
+        // update_plated_meal_order_details('plate-meal-guest-arrival-time', 'Time guests arrive: ', guest_arrival_time );
+        store_progress('plate_meal_guest_arrival_time', guest_arrival_time);
     }
 
     // ------------------------------- //
@@ -262,7 +295,9 @@ jQuery(function($){
     function update_guest_departure_time()
     {
         guest_departure_time = `${guest_departure_hour}:${guest_departure_minute} ${guest_departure_ampm}`;
-        update_plated_meal_order_details('plate-meal-guest-departure-time', 'Time guests depart: ', guest_departure_time );
+        // update_plated_meal_order_details('plate-meal-guest-departure-time', 'Time guests depart: ', guest_departure_time );
+        store_progress('plate_meal_guest_departure_time', guest_departure_time );
+
     }
 
     // ------------------------------- //
@@ -291,7 +326,7 @@ jQuery(function($){
 
         selected_meal_set = $plated_meal.val();
 
-        console.log( 'meal selected ' + selected_meal_set );
+        console.log( {'meal selected': selected_meal_set, 'previously selected meal set' : previously_selected_meal_set} );
 
         update_plated_meal_order_details('plate-meal-selected-meal-set', 'Selected Meal Set: ', selected_meal_set, $plated_meal.data('price'), true );
 
@@ -330,28 +365,32 @@ jQuery(function($){
             $choose_desserts.html( selected_meal_set_parts[selected_meal_set]['choose_desserts'] ).removeClass('loading');
 
             // Populate values
-            let selected_meal_set_dependency = order_details_dependency['plate-meal-selected-meal-set'][selected_meal_set];
-            for( let meal_part_id in selected_meal_set_dependency ) {
-                let prefix = 'plate-meal-selected-meal-set-' + wpFeSanitizeTitle(selected_meal_set) + '-plate-meal-';
+            console.log(order_details_dependency);
 
-                let meal_part = meal_part_id.replace(prefix, '');
+            if(order_details_dependency.length) {
+                let selected_meal_set_dependency = order_details_dependency['plate-meal-selected-meal-set'][selected_meal_set];
+                for( let meal_part_id in selected_meal_set_dependency ) {
+                    let prefix = 'plate-meal-selected-meal-set-' + wpFeSanitizeTitle(selected_meal_set) + '-plate-meal-';
 
-                console.log([prefix, meal_part]);
-                if(meal_part === 'selected-dessert') {
-                    console.log('[value="' + selected_meal_set_dependency[meal_part_id] + '"]', $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]'))
-                    $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]').prop('checked', true);
-                } else if (meal_part === 'selected-hors-doeuvres') {
-                    let selected_hors_doeuvres = selected_meal_set_dependency[meal_part_id].split(', ');
-                    console.log(selected_hors_doeuvres);
-                    for( let hors_doeuvre of selected_hors_doeuvres ) {
-                        console.log('[value="' + hors_doeuvre + '"]', $('[value="' + hors_doeuvre + '"]'));
-                        $('[value="' + hors_doeuvre + '"]').prop('checked', true);
+                    let meal_part = meal_part_id.replace(prefix, '');
+
+                    console.log([prefix, meal_part]);
+                    if(meal_part === 'selected-dessert') {
+                        console.log('[value="' + selected_meal_set_dependency[meal_part_id] + '"]', $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]'))
+                        $('[value="' + selected_meal_set_dependency[meal_part_id] + '"]').prop('checked', true);
+                    } else if (meal_part === 'selected-hors-doeuvres') {
+                        let selected_hors_doeuvres = selected_meal_set_dependency[meal_part_id].split(', ');
+                        console.log(selected_hors_doeuvres);
+                        for( let hors_doeuvre of selected_hors_doeuvres ) {
+                            console.log('[value="' + hors_doeuvre + '"]', $('[value="' + hors_doeuvre + '"]'));
+                            $('[value="' + hors_doeuvre + '"]').prop('checked', true);
+                        }
+                    } else {
+                        console.log(meal_part, $('[name=' + meal_part + ']'));
+                        $('[name=' + meal_part + ']').val(selected_meal_set_dependency[meal_part_id]);
                     }
-                } else {
-                    console.log(meal_part, $('[name=' + meal_part + ']'));
-                    $('[name=' + meal_part + ']').val(selected_meal_set_dependency[meal_part_id]);
                 }
-        }
+            }
 
         } else {
             jQuery.ajax({
@@ -368,19 +407,49 @@ jQuery(function($){
                     $choose_entrees
                         .removeClass('loading')
                         .find('.slide-content')
-                            .html(data.entrees);
+                        .html(data.entrees);
                     $choose_hors_doeuvres
                         .removeClass('loading')
                         .find('.slide-content')
-                            .html(data.hors_doeuvres)
+                        .html(data.hors_doeuvres)
                     ;
                     $choose_desserts
                         .removeClass('loading')
                         .find('.slide-content')
-                            .html(data.desserts)
+                        .html(data.desserts)
                     ;
 
                     $choose_entrees.find('input[type=number]').attr('max', guest_count);
+
+                    $choose_entrees.find('input[type=number]').each(function(){
+                        let input_name = $(this).attr('name');
+                        if( input_name in plated_meal_progress ) {
+                            $(this).val( plated_meal_progress[input_name] ).change();
+                        }
+                    });
+
+
+                    $choose_hors_doeuvres.find('input').each(function(){
+                        let input_name = $(this).attr('name');
+
+                        if( plated_meal_progress[input_name] === undefined ) return;
+
+                        // TODO: check if plated meal progress input name is iterable
+                        if( plated_meal_progress[input_name].indexOf( $(this).val() )  > -1 )
+                            $(this).click();
+
+                    });
+
+                    $choose_desserts.find('input').each(function(){
+                        let input_name = $(this).attr('name');
+
+                        if( plated_meal_progress[input_name] === undefined ) return;
+
+                        // TODO: check if plated meal progress input name is iterable
+                        if( plated_meal_progress[input_name] === $(this).val() )
+                            $(this).click();
+
+                    })
 
                 }
             });
@@ -676,4 +745,82 @@ jQuery(function($){
     })
 
 
+    // Store progress in localStorage
+
+    let plated_meal_progress = {};
+
+    if( localStorage.plated_meal_order ){
+        if( confirm("We see that you have an order that's in progress, we can load it for you or you can press Cancel to create a new one.") ) {
+            plated_meal_progress = JSON.parse( localStorage.getItem('plated_meal_order') );
+            retrieve_progress();
+        }
+    }
+
+    $('#plated_meal_form').on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
+
+        let input_name = $(this).attr('name');
+
+        // if checkbox, store in an array
+        if( $(this).is('input[type=checkbox]') ) {
+
+            if( plated_meal_progress[input_name] === undefined  ) {
+                console.log('setting up array for plated meal progress ' + input_name );
+                plated_meal_progress[input_name] = [];
+            }
+
+            if( $(this).is(':checked') ) {
+                plated_meal_progress[input_name].push( $(this).val() );
+            } else {
+                const index = plated_meal_progress[input_name].indexOf( $(this).val() );
+                if (index > -1) {
+                    plated_meal_progress[input_name].splice(index, 1);
+                }
+            }
+        }
+        else
+            plated_meal_progress[input_name] = $(this).val();
+        console.log(['PLATED MEAL PROGRESS from changed fields', plated_meal_progress]);
+    });
+
+    function store_progress(name, value) {
+        plated_meal_progress[name] = value;
+        console.log(['PLATED MEAL PROGRESS from storing', plated_meal_progress]);
+    }
+
+    function retrieve_progress() {
+        console.log(['PLATED MEAL PROGRESS from retrieving', plated_meal_progress]);
+        for( const field in plated_meal_progress ) {
+            let value = plated_meal_progress[field];
+
+            let $field = $(`[name=${field}]`);
+
+            if($field.is('input[type=radio]'))
+                $(`[name=${field}][value="${value}"]`).click();
+            else if( $field.is('input[type=checkbox]' ) ) {
+                for ( const checkbox_value of value ) {
+                    console.log(`[name=${field}][value="${checkbox_value}"]`);
+                    $(`[name=${field}][value="${checkbox_value}"]`).click();
+                }
+            }
+
+            else if(field === 'catering_date')
+            {
+                console.log('field is Catering Date from flatpickr', catering_flatpickr);
+                let catering_date = new Date(value);
+
+                catering_flatpickr.setDate(catering_date, true);
+            }
+            else
+            {
+                $field.val(value).change();
+            }
+        }
+    }
+
+    // store progress in localStorage before closing tab
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+
+        localStorage.setItem('plated_meal_order', JSON.stringify(plated_meal_progress));
+    });
 });

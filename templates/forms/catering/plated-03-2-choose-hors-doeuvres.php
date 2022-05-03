@@ -1,4 +1,6 @@
 <?php
+if($meal):
+
 $meal_title = sanitize_title( $meal['name'] );
 ?>
 
@@ -11,7 +13,7 @@ $meal_title = sanitize_title( $meal['name'] );
         ?>
 
         <div class="hors_doeuvres-item" data-name="<?php echo $hors_doeuvres['name'] ?>" data-price="<?php echo $hors_doeuvres['price'] ?>" data-id="<?php echo $hors_doeuvres_title ?>">
-            <input type="<?php echo $field_type ?>" value="<?php echo $hors_doeuvres['name'] ?>" name="plated_meal_hors_doeuvres" id='<?php echo $hors_doeuvres_title ?>'/>
+            <input type="<?php echo $field_type ?>" value="<?php echo $hors_doeuvres['name'] ?>" name="plated_meal_hors_doeuvres_<?php echo $meal_title ?>" id='<?php echo $hors_doeuvres_title ?>'/>
 
             <label for="<?php echo $hors_doeuvres_title ?>">
 
@@ -40,3 +42,9 @@ $meal_title = sanitize_title( $meal['name'] );
     endforeach;
     ?>
 </div>
+
+<?php
+else:
+echo "<h3>Please select a Meal Set from the previous slide. Thanks! </h3>";
+endif;
+?>

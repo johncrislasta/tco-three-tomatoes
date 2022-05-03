@@ -35,3 +35,51 @@
 
 }
 
+#catering_datepicker + .flatpickr-calendar {
+
+  .flatpickr-day.selected {
+    background: #309e9a !important;
+  }
+
+  &.inline {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .flatpickr-innerContainer {
+    width: 100% !important;
+  }
+
+  .flatpickr-rContainer {
+    width: 100%;
+  }
+
+  .flatpickr-days {
+    width: 100%;
+  }
+
+  .dayContainer {
+    max-width: 100%;
+    width: 100%;
+    flex-wrap: wrap;
+    flex: 1 0 14.2857143%;
+  }
+
+  span.flatpickr-day {
+    max-width: 14.2857143%;
+    flex-grow: 1;
+    aspect-ratio: 1/1;
+    height: auto;
+    display: flex;
+    align-items: center;
+    font-size: 1.3em;
+  }
+
+  input#catering_datepicker {
+    opacity: 0;
+  }
+
+  .flatpickr-months {
+    padding-bottom: 1em;
+  }
+}

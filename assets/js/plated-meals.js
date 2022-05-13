@@ -191,7 +191,7 @@ jQuery(function($){
         } else {
             $(this).next('.other-input').hide();
         }
-    })
+    });
 
     // ------------------------------- //
     // Update Guest Count Detail
@@ -823,4 +823,25 @@ jQuery(function($){
 
         localStorage.setItem('plated_meal_order', JSON.stringify(plated_meal_progress));
     });
+
+    // Ajax call on the Add to Cart button
+    $('#plated_meal_add_to_cart').click(function() {
+        let data = {
+            action: 'ttc_store_plated_meal_order_progress',
+            product_id: $(this).val(),
+            plated_meal_order_progress: plated_meal_progress,
+        };
+
+        console.log(data);
+
+        jQuery.ajax({
+            url: tco_ttc_js.ajaxurl,
+            type: 'post',
+            data: data,
+            dataType: 'json',
+            success: function (data, textStatus, jqXHR) {
+                console.log(data);
+            }
+        });
+    })
 });

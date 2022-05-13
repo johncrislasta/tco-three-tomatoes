@@ -38,7 +38,14 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
         {
             add_action('woocommerce_before_add_to_cart_form', array($this, 'print_form'), 30 );
 
+            add_action('woocommerce_single_product_summary', array($this, 'remove_add_to_cart'), 2 );
+
+            add_filter( 'woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 3 );
+
+
+
             add_action('wp_ajax_ttc_get_plated_meal_parts', array( $this, 'get_meal_parts' ) );
+            add_action('wp_ajax_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
         }
 
         /**
@@ -101,6 +108,16 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
         public function print_form()
         {
+
+            // Remove Add To Cart
+            remove_action( 'woocommerce_simple_add_to_cart', 'woocommerce_simple_add_to_cart', 30 );
+            remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
+
+            if ( ! is_user_logged_in() ) {
+                echo "You need to be logged in to make an order. <a href='".wp_login_url()."' >Please sign in here</a>";
+                return;
+            }
+
             $product_id = get_the_ID();
             $meals_fields = $this->retrieve_all_meals_info($product_id);
             $addon_modules = $this->get_meal_addon_modules($product_id);
@@ -207,11 +224,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             $slides = array_merge($slides, $addon_slides, $notes_slides, $final_slides);
 
-            // Remove Add To Cart
-            remove_action( 'woocommerce_simple_add_to_cart', 'woocommerce_simple_add_to_cart', 30 );
-            remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
-
-
             echo Acme::get_template('forms/slider-form', [ 'slides' => $slides, 'data'=>['product_id' => $product_id, 'validation' => 'inline', 'validation-trigger' => '.slide-next, .slide-prev'], 'form_id' => 'plated_meal_form' ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );
         }
@@ -222,7 +234,40 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
         // @TODO: Add cart total details
 
+
+        public function remove_add_to_cart() {
+
+            // TODO: add check if product is plated meal
+            add_action('woocommerce_before_add_to_cart_button', function(){ echo "<div style='display:none;'>"; }, 10);
+            add_action('woocommerce_after_add_to_cart_button', function(){ echo "</div>"; }, 10);
+            add_action('woocommerce_after_add_to_cart_button', function(){
+                    global $product;
+                    $product_id = $product->get_id();
+
+                    echo "<button type='button' id='plated_meal_add_to_cart' name='add-to-cart' value='{$product_id}' class='single_add_to_cart_button button alt'>Add to Cart</button>";
+                }, 20);
+        }
+/*		<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?><!--</button>-->*/
+
+        public function store_plated_meal_order_progress() {
+            Acme::diep($_POST);
+            $_SESSION['ttc_plated_meal_progress'] = $_POST['plated_meal_order_progress'];
+        }
+
+
+        public function add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
+            // get product id & price
+            $product = wc_get_product( $product_id );
+            $price = $product->get_price();
+            // extra pack checkbox
+            if( ! empty( $_POST['extra_pack'] ) ) {
+
+                $cart_item_data['new_price'] = $price + 15;
+            }
+            return $cart_item_data;
+        }
     }
 
     Plated_Meal::instance();
 }
+

@@ -478,6 +478,10 @@ div#plated_meal_order_details {
   }
 }
 
+#plated_meal_add_to_cart {
+  display: none;
+}
+
 #plated_meal_form {
   + form.cart {
     display: none;
@@ -492,7 +496,7 @@ div#plated_meal_order_details {
     + form.cart {
       display: block;
 
-      button {
+      button, #plated_meal_add_to_cart {
         display: inline-block;
         pointer-events: auto;
       }

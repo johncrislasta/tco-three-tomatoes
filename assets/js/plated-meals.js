@@ -157,7 +157,7 @@ jQuery(function($){
         console.log(['RUNNING TOTAL OBJECT', running_total_object]);
         let price = sum(running_total_object);
 
-        price = get_sum_of_order_detail_prices() * guest_count;
+        price = get_calculated_price();
 
         let $price_html = `<span class="woocommerce-Price-amount amount">
             <bdi>
@@ -515,6 +515,10 @@ jQuery(function($){
         return sum;
     }
 
+    function get_calculated_price() {
+        return get_sum_of_order_detail_prices() * guest_count;
+    }
+
     function get_num(str) {
         return parseFloat( str.replace( /^\D+/g, '') );
     }
@@ -540,8 +544,8 @@ jQuery(function($){
                 selected_meal_set );
 
             let total_count = get_total_meal_plates();
-
             let max_count = guest_count - total_count + plate_count;
+            console.log({max_count: max_count, guest_count: guest_count, total_count: total_count, plate_count: plate_count});
 
             // console.log({
             //     id: $(this).attr("name"),
@@ -692,9 +696,9 @@ jQuery(function($){
     {
         console.log('update_addon_time', addon_time_picker, id, title);
 
-        let hour    = addon_time_picker[id]['hour'];
-        let minute  = addon_time_picker[id]['minute'];
-        let ampm    = addon_time_picker[id]['ampm'];
+        let hour    = addon_time_picker[id][id + '_hour'] ?? '12';
+        let minute  = addon_time_picker[id][id + '_minute'] ?? '00';
+        let ampm    = addon_time_picker[id][id + '_ampm'] ?? 'AM';
 
         let addon_time = `${hour}:${minute} ${ampm}`;
         update_plated_meal_order_details('plate-meal-addon-' + id, title, addon_time );
@@ -829,6 +833,7 @@ jQuery(function($){
         let data = {
             action: 'ttc_store_plated_meal_order_progress',
             product_id: $(this).val(),
+            calculated_price: get_calculated_price(),
             plated_meal_order_progress: plated_meal_progress,
         };
 
@@ -840,7 +845,8 @@ jQuery(function($){
             data: data,
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {
-                console.log(data);
+                if( data.redirect )
+                    window.location = data.redirect;
             }
         });
     })

@@ -23,6 +23,9 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
         public $hors_doueuvres_choices_field_name = 'hors_doueuvres_choices';
         public $dessert_choices_field_name = 'dessert_choices';
 
+
+        public $product_id = -1;
+
         /**
          * Any Singleton class.
          *
@@ -42,7 +45,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             add_filter( 'woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 3 );
 
+            add_action( 'woocommerce_before_calculate_totals', array($this, 'add_custom_price') );
 
+
+            $this->product_id = get_field('catering_plated_meal_product_id', 'option');
 
             add_action('wp_ajax_ttc_get_plated_meal_parts', array( $this, 'get_meal_parts' ) );
             add_action('wp_ajax_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
@@ -109,12 +115,14 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
         public function print_form()
         {
 
+            if( get_the_ID() != $this->product_id ) return;
+
             // Remove Add To Cart
             remove_action( 'woocommerce_simple_add_to_cart', 'woocommerce_simple_add_to_cart', 30 );
             remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
 
             if ( ! is_user_logged_in() ) {
-                echo "You need to be logged in to make an order. <a href='".wp_login_url()."' >Please sign in here</a>";
+                echo "You need to be logged in to make an order. <a href='".wp_login_url( get_the_permalink() )."' >Please sign in here</a>";
                 return;
             }
 
@@ -252,6 +260,28 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
         public function store_plated_meal_order_progress() {
             Acme::diep($_POST);
             $_SESSION['ttc_plated_meal_progress'] = $_POST['plated_meal_order_progress'];
+            $_SESSION['ttc_plated_meal_progress']['product_id'] = $_POST['product_id'];
+            $_SESSION['ttc_plated_meal_progress']['regular_price'] = $_POST['regular_price'];
+
+            $return = array(
+                'redirect' => '/cart/?add-to-cart=' . $_POST['product_id']
+            );
+
+            die( json_encode($return) );
+        }
+
+        public function add_custom_price( $cart_object ) {
+            $custom_price = 10; // This will be your custome price
+
+            if( !isset( $_SESSION['ttc_plated_meal_progress']['product_id'] ) ) return;
+            Acme::diep( $cart_object );
+
+            foreach ( $cart_object->cart_contents as $key => $value ) {
+                $value['data']->set_regular_price($custom_price);
+                $value['data']->set_sale_price($custom_price);
+                // for WooCommerce version 3+ use:
+                // $value['data']->set_price($custom_price);
+            }
         }
 
 

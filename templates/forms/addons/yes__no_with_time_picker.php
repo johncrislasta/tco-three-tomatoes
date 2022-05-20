@@ -34,18 +34,18 @@ echo $before_content_html
             <?php echo $secondary_question ?>
         </h3>
 
-        <select name="hour"" data-id="<?php echo $secondary_question_slug ?>">
+        <select name="<?php echo $secondary_question_slug ?>_hour"" data-id="<?php echo $secondary_question_slug ?>">
             <option>00</option>
             <?php for( $i = 1; $i <= 12; $i++ ): ?>
                 <option><?php echo str_pad( $i, 2, '0', STR_PAD_LEFT )?></option>
             <?php endfor; ?>
         </select>
-        <select name="minute"" data-id="<?php echo $secondary_question_slug ?>">
+        <select name="<?php echo $secondary_question_slug ?>_minute"" data-id="<?php echo $secondary_question_slug ?>">
             <?php for( $i = 0; $i < 60; $i+=5 ): ?>
                 <option><?php echo str_pad( $i, 2, '0', STR_PAD_LEFT )?></option>
             <?php endfor; ?>
         </select>
-        <select name="ampm" data-id="<?php echo $secondary_question_slug ?>">
+        <select name="<?php echo $secondary_question_slug ?>_ampm" data-id="<?php echo $secondary_question_slug ?>">
             <option>AM</option>
             <option>PM</option>
         </select>

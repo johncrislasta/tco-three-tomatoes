@@ -11,7 +11,7 @@
 <input name="occasion_other" id="occasion-other" class="other-input" type="text" placeholder="What's the occasion?"/>
 
 <h3>How many guests are we expecting?</h3>
-<input id="number-guest-input" name="number_guest_input" type="number" min="10" placeholder="10" required >
+<input id="number-guest-input" name="number_of_guests" type="number" min="10" placeholder="10" required >
 
 <h3>Where will the event be held?</h3>
 <select name="venue" id="venue-select">

@@ -43,10 +43,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             add_action('woocommerce_single_product_summary', array($this, 'remove_add_to_cart'), 2 );
 
-            add_filter( 'woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 3 );
+//            add_filter( 'woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 3 );
 
             add_action( 'woocommerce_before_calculate_totals', array($this, 'add_custom_price') );
 
+            add_action( 'woocommerce_get_item_data', array($this, 'get_item_data'), 10, 2 );
+
+            add_action('woocommerce_thankyou', array($this, 'create_catering_post'), 10, 1);
 
             $this->product_id = get_field('catering_plated_meal_product_id', 'option');
 
@@ -249,19 +252,19 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             add_action('woocommerce_before_add_to_cart_button', function(){ echo "<div style='display:none;'>"; }, 10);
             add_action('woocommerce_after_add_to_cart_button', function(){ echo "</div>"; }, 10);
             add_action('woocommerce_after_add_to_cart_button', function(){
-                    global $product;
-                    $product_id = $product->get_id();
+                global $product;
+                $product_id = $product->get_id();
 
-                    echo "<button type='button' id='plated_meal_add_to_cart' name='add-to-cart' value='{$product_id}' class='single_add_to_cart_button button alt'>Add to Cart</button>";
-                }, 20);
+                echo "<button type='button' id='plated_meal_add_to_cart' name='add-to-cart' value='{$product_id}' class='single_add_to_cart_button button alt'>Add to Cart</button>";
+            }, 20);
         }
-/*		<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?><!--</button>-->*/
+        /*		<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?><!--</button>-->*/
 
         public function store_plated_meal_order_progress() {
-            Acme::diep($_POST);
+//            Acme::diep($_POST);
             $_SESSION['ttc_plated_meal_progress'] = $_POST['plated_meal_order_progress'];
             $_SESSION['ttc_plated_meal_progress']['product_id'] = $_POST['product_id'];
-            $_SESSION['ttc_plated_meal_progress']['regular_price'] = $_POST['regular_price'];
+            $_SESSION['ttc_plated_meal_progress']['regular_price'] = $_POST['calculated_price'];
 
             $return = array(
                 'redirect' => '/cart/?add-to-cart=' . $_POST['product_id']
@@ -271,21 +274,29 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
         }
 
         public function add_custom_price( $cart_object ) {
-            $custom_price = 10; // This will be your custome price
-
+//            return;
+//            Acme::diep(['add_custom_price', $_SESSION, $cart_object ]);
             if( !isset( $_SESSION['ttc_plated_meal_progress']['product_id'] ) ) return;
-            Acme::diep( $cart_object );
+
+            $custom_price = $_SESSION['ttc_plated_meal_progress']['regular_price']; // This will be your custome price
+//            Acme::diep( $cart_object );
 
             foreach ( $cart_object->cart_contents as $key => $value ) {
-                $value['data']->set_regular_price($custom_price);
-                $value['data']->set_sale_price($custom_price);
+                $product = $value['data'];
+                if( $product->get_id() != $_SESSION['ttc_plated_meal_progress']['product_id'] ) continue;
+//                Acme::diep($product->get_id());
+//                $product->set_regular_price($custom_price);
+//                $product->set_sale_price($custom_price);
                 // for WooCommerce version 3+ use:
-                // $value['data']->set_price($custom_price);
+                $value['data']->set_price($custom_price);
             }
         }
 
 
         public function add_cart_item_data( $cart_item_data, $product_id, $variation_id ) {
+
+//            Acme::diep([$cart_item_data, $product_id, $variation_id], false);
+
             // get product id & price
             $product = wc_get_product( $product_id );
             $price = $product->get_price();
@@ -295,6 +306,119 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 $cart_item_data['new_price'] = $price + 15;
             }
             return $cart_item_data;
+        }
+
+        /**
+         * Display custom item data in the cart
+         */
+        public function get_item_data( $item_data, $cart_item_data ) {
+//            Acme::diep(['get_item_data', $item_data, $_SESSION], false);
+            if( $cart_item_data['product_id'] != $_SESSION['ttc_plated_meal_progress']['product_id'] ) return;
+
+            $exclude = array(
+                'catering_datepicker',
+                'guest_arrival_hour',
+                'guest_arrival_min',
+                'guest_arrival_ampm',
+                'guest_departure_hour',
+                'guest_departure_min',
+                'guest_departure_ampm',
+                'product_id',
+                'regular_price',
+                'accept_terms_conditions',
+            );
+
+            foreach ( $_SESSION['ttc_plated_meal_progress'] as $key => $value ) {
+
+                if( in_array( $key, $exclude) ) continue;
+
+                $key = str_replace( ['-', '_'], ' ', $key );
+                $key = ucfirst($key);
+
+                if( is_array($value) )
+                    $value = implode( ', ', $value );
+
+                $value = str_replace( ['-', '_'], ' ', $value );
+                $value = ucfirst($value);
+
+                $item_data[] = array(
+                    'key' => $key,
+                    'value' => $value
+                );
+            }
+
+
+            return $item_data;
+        }
+
+        function create_catering_post( $order_id ) {
+            if ( ! $order_id )
+                return;
+
+            // Allow code execution only once
+            if( ! get_post_meta( $order_id, '_thankyou_action_done', true ) ) {
+
+                // Get an instance of the WC_Order object
+                $order = wc_get_order( $order_id );
+
+                // Get the order key
+                $order_key = $order->get_order_key();
+
+                // Get the order number
+                $order_key = $order->get_order_number();
+
+                if($order->is_paid())
+                    $paid = __('yes');
+                else
+                    $paid = __('no');
+
+                // Loop through order items
+                foreach ( $order->get_items() as $item_id => $item ) {
+
+                    // Get the product object
+                    $product = $item->get_product();
+
+                    // Get the product Id
+                    $product_id = $product->get_id();
+
+                    if( isset( $_SESSION['ttc_plated_meal_progress'] ) && $_SESSION['ttc_plated_meal_progress']['product_id'] == $product_id ) {
+
+                        $catering_order = $_SESSION['ttc_plated_meal_progress'];
+
+                        // Create new post
+                        $title = $catering_order['catering_date'] . ' ' . $catering_order['plated_meal'] . ' ' . $catering_order['number_of_guests'];
+
+                        $status = $order->is_paid() ? 'publish' : 'draft';
+                        
+                        $new_post = array(
+                            'post_title' => $title,
+                            'post_status' => $status,
+                            'post_type' => Catering::$post_type,
+                        );
+
+                        $post_id = wp_insert_post($new_post);
+
+                        $catering = new Catering($post_id);
+                        $catering->start_date = $catering_order['catering_date'];
+                        $catering->start_time = $catering_order['plate_meal_guest_arrival_time'];
+                        $catering->end_date = $catering_order['catering_date'];
+                        $catering->end_time = $catering_order['plate_meal_guest_departure_time'];
+                        $catering->number_of_guests = $catering_order['number_of_guests'];
+                        $catering->order_id = $order_id;
+
+                        $catering->save();
+
+                    }
+
+                }
+
+                // Output some data
+//                echo '<p>Order ID: '. $order_id . ' — Order Status: ' . $order->get_status() . ' — Order is paid: ' . $paid . '</p>';
+
+                // Flag the action as done (to avoid repetitions on reload for example)
+                $order->update_meta_data( '_thankyou_action_done', true );
+                $order->save();
+            }
         }
     }
 

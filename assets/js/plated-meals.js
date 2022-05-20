@@ -428,6 +428,7 @@ jQuery(function($){
                         }
                     });
 
+                    update_all_entree_number_of_guest_plates_fields();
 
                     $choose_hors_doeuvres.find('input').each(function(){
                         let input_name = $(this).attr('name');
@@ -491,7 +492,7 @@ jQuery(function($){
 
     function get_total_meal_plates()
     {
-        return sum( meal_plates[current_meal_id] )
+        return sum( meal_plates[current_meal_id] );
     }
 
     function sum( obj ) {
@@ -527,6 +528,12 @@ jQuery(function($){
     $choose_entrees.on('change', '.entree-number-of-guest-plates', function(){
         let total_plates_entered = 0;
 
+        update_all_entree_number_of_guest_plates_fields();
+    });
+
+
+    function update_all_entree_number_of_guest_plates_fields() {
+
         // find all number of guest plates field
         let $entree_plates = $choose_entrees.find('.entree-number-of-guest-plates');
 
@@ -544,25 +551,20 @@ jQuery(function($){
                 selected_meal_set );
 
             let total_count = get_total_meal_plates();
-            let max_count = guest_count - total_count + plate_count;
-            console.log({max_count: max_count, guest_count: guest_count, total_count: total_count, plate_count: plate_count});
-
-            // console.log({
-            //     id: $(this).attr("name"),
-            //     guestcount: guest_count,
-            //     totalcount: total_count,
-            //     platecount: plate_count,
-            //     maxcount: max_count,
-            //     meal_plates: meal_plates,
-            //     current_meal_id: current_meal_id
-            //     }
-            // );
+            let max_count = parseInt(guest_count) - total_count + plate_count;
+            console.log( {
+                entree: $(this).data('dish_name'),
+                meal_plates: meal_plates,
+                max_count: max_count,
+                guest_count: parseInt(guest_count),
+                total_count: total_count,
+                plate_count: plate_count
+            } );
 
             // Update max attribute
             $(this).attr('max', max_count );
         })
-    });
-
+    }
 
     // ------------------------------- //
     // Limit meal part checkboxes selection
@@ -762,6 +764,8 @@ jQuery(function($){
 
     $('#plated_meal_form').on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
 
+        const $input = $(this);
+
         let input_name = $(this).attr('name');
 
         // if checkbox, store in an array
@@ -773,12 +777,17 @@ jQuery(function($){
             }
 
             if( $(this).is(':checked') ) {
+                console.log( [ 'checkbox is checked', input_name, plated_meal_progress[input_name], $(this).val() ] );
                 plated_meal_progress[input_name].push( $(this).val() );
             } else {
-                const index = plated_meal_progress[input_name].indexOf( $(this).val() );
-                if (index > -1) {
-                    plated_meal_progress[input_name].splice(index, 1);
-                }
+
+                const result = plated_meal_progress[input_name].filter(function(x) {
+                    return x !== $input.val();
+                });
+
+                plated_meal_progress[input_name] = result;
+                console.log( [ 'checkbox not is checked', input_name, plated_meal_progress[input_name], $(this).val() ] );
+
             }
         }
         else

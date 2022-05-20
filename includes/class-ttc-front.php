@@ -44,6 +44,8 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Front' ) ) {
             //Load scripts and styles for the frontend
             add_action('wp_enqueue_scripts', array(&$this, 'enqueue_scripts_styles'));
 
+            add_action( 'init', [$this, 'session_init'] );
+
         }
 
 
@@ -85,6 +87,11 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Front' ) ) {
             wp_enqueue_script('tco_ttc_vendor_sanitize_title_js', TTC_ASSETS . 'vendor/wp-fe-sanitize-title.js', array(), '', true);
         }
 
+        public function session_init() {
+            if (!session_id()) {
+                session_start();
+            }
+        }
     }
 
     Front::instance();

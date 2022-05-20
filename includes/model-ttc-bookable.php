@@ -30,6 +30,9 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookable' ) ) {
         public $customer_name;
         public $number_of_guests;
 
+        public $order_id;
+        public $customer;
+
         public $notes;
         public $private_notes;
         public $media;
@@ -46,19 +49,45 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookable' ) ) {
 
 //            Acme::diep([$this->post]);
 
-            if( $this->post->post_type != static::$post_type )
-                return new \WP_Error( static::$ERROR_WRONG_POST_TYPE, 'Wrong post type' );
+            if ( $this->post ) {
+                if( $this->post->post_type != static::$post_type )
+                    return new \WP_Error( static::$ERROR_WRONG_POST_TYPE, 'Wrong post type' );
 
-            $this->start_date = get_field('start_date', $this->post->ID );
-            $this->start_time = get_field('start_time', $this->post->ID );
+                $this->start_date = get_field('start_date', $this->post->ID );
+                $this->start_time = get_field('start_time', $this->post->ID );
 
-            $this->end_date = get_field('end_date', $this->post->ID );
-            $this->end_time = get_field('end_time', $this->post->ID );
+                $this->end_date = get_field('end_date', $this->post->ID );
+                $this->end_time = get_field('end_time', $this->post->ID );
+            }
 
 //            Acme::diep([$this->start_date, $this->start_time, $this->end_date, $this->end_time], false);
 
 //            add_action( 'wp_insert_post', array( $this, 'new_bookable' ), 10, 3 );
 
+        }
+
+        public function save()
+        {
+            if( $this->start_date )
+                 update_field('start_date', $this->start_date, $this->post->ID );
+
+            if( $this->start_time )
+                update_field('start_time', $this->start_time, $this->post->ID );
+
+            if( $this->end_date );
+                update_field('end_date', $this->end_date, $this->post->ID );
+
+            if( $this->end_time )
+                update_field('end_time', $this->end_time, $this->post->ID );
+
+            if( $this->customer_name )
+                update_field('customer_name', $this->customer_name, $this->post->ID );
+
+            if( $this->number_of_guests )
+                update_field('number_of_guests', $this->number_of_guests, $this->post->ID );
+
+            if( $this->order_id )
+                update_field('order_id', $this->order_id, $this->post->ID );
         }
 
         public function get_start_date()

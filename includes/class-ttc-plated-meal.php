@@ -54,7 +54,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             $this->product_id = get_field('catering_plated_meal_product_id', 'option');
 
             add_action('wp_ajax_ttc_get_plated_meal_parts', array( $this, 'get_meal_parts' ) );
+            add_action('wp_ajax_nopriv_ttc_get_plated_meal_parts', array( $this, 'get_meal_parts' ) );
+
             add_action('wp_ajax_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
+            add_action('wp_ajax_nopriv_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
         }
 
         /**
@@ -123,11 +126,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             // Remove Add To Cart
             remove_action( 'woocommerce_simple_add_to_cart', 'woocommerce_simple_add_to_cart', 30 );
             remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart', 30 );
-
-            if ( ! is_user_logged_in() ) {
-                echo "You need to be logged in to make an order. <a href='".wp_login_url( get_the_permalink() )."' >Please sign in here</a>";
-                return;
-            }
 
             $product_id = get_the_ID();
             $meals_fields = $this->retrieve_all_meals_info($product_id);

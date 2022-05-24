@@ -58,6 +58,9 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             add_action('wp_ajax_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
             add_action('wp_ajax_nopriv_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
+
+            add_action('template_redirect', array( $this, 'check_if_logged_in' ) );
+
         }
 
         /**
@@ -424,6 +427,33 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 // Flag the action as done (to avoid repetitions on reload for example)
                 $order->update_meta_data( '_thankyou_action_done', true );
                 $order->save();
+            }
+        }
+
+        function check_if_logged_in()
+        {
+            $pageid = get_option( 'woocommerce_checkout_page_id' );
+            if(!is_user_logged_in() && is_page($pageid))
+            {
+                $url = add_query_arg(
+                    'redirect_to',
+                    get_permalink($pageid),
+                    site_url('/my-account/') // your my account url
+                );
+                wp_redirect($url);
+                exit;
+            }
+            if(is_user_logged_in())
+            {
+                if(is_page(get_option( 'woocommerce_myaccount_page_id' )))
+                {
+
+                    $redirect = $_GET['redirect_to'];
+                    if (isset($redirect)) {
+                        echo '<script>window.location.href = "'.$redirect.'";</script>';
+                    }
+
+                }
             }
         }
     }

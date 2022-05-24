@@ -390,12 +390,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                     // Get the product Id
                     $product_id = $product->get_id();
 
+
                     if( isset( $_SESSION['ttc_plated_meal_progress'] ) && $_SESSION['ttc_plated_meal_progress']['product_id'] == $product_id ) {
 
                         $catering_order = $_SESSION['ttc_plated_meal_progress'];
 
                         // Create new post
-                        $title = $catering_order['catering_date'] . ' ' . $catering_order['plated_meal'] . ' ' . $catering_order['number_of_guests'];
+                        $title = $catering_order['catering_date'] . ' / ' . wp_get_current_user()->display_name . ' / ' . $catering_order['plated_meal'] . ' / ' . $catering_order['number_of_guests'] . ' Guests';
 
                         $status = $order->is_paid() ? 'publish' : 'draft';
                         

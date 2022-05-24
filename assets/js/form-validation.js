@@ -23,6 +23,21 @@ jQuery(function($){
         else
             $(triggers).attr('disabled', 'disabled');
 
+    }).on('blur', '[data-custom_validation]', function(){
+        let $field = $(this);
+
+        let is_field_valid = validate_custom( $field );
+
+        // check if form has triggers to disable
+        let $triggered_form = $field.closest('[data-validation-trigger]');
+        if( $triggered_form.length === 0 ) return true;
+
+        let triggers = $triggered_form.data('validation-trigger');
+
+        if( is_field_valid )
+            $(triggers).attr('disabled', null );
+        else
+            $(triggers).attr('disabled', 'disabled');
     });
 
     function validate_required($field) {
@@ -51,6 +66,23 @@ jQuery(function($){
         return true;
     }
 
+    function validate_custom($field) {
+
+        let $required_error_msg = prepare_error_message_container($field, $field.data('custom_validation_message') );
+
+        $field.removeClass('validation-failed' );
+
+        console.log('what is the custom validation?', $field.data('custom_validation'));
+
+        if( ! window[ $field.data('custom_validation') ]() ) {
+            $required_error_msg.show();
+            $field.addClass('validation-failed' );
+            return false;
+        }
+
+        return true;
+    }
+
     $('[data-validation-trigger]').each(function() {
 
         let $form = $(this);
@@ -73,7 +105,16 @@ jQuery(function($){
                 validation_failed_fields.push($(this).attr('name'));
         });
 
+        $form.find('.slide.active [data-custom_validation]').each(function (){
+            if( ! $(this).is(":visible") ) return;
+
+            if( ! validate_custom( $(this) ) ) {
+                validation_failed_fields.push($(this).attr('name'));
+            }
+        });
+
         console.log('validating fields' , validation_failed_fields);
+
         // check if there are failed validations
         if( validation_failed_fields.length > 0 ) {
             event.stopImmediatePropagation();

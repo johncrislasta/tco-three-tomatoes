@@ -1,4 +1,5 @@
-jQuery(function($){
+const $ = jQuery;
+// jQuery(function($){
 
     const $product_gallery = $('.woocommerce-product-gallery');
 
@@ -858,5 +859,21 @@ jQuery(function($){
                     window.location = data.redirect;
             }
         });
-    })
-});
+    });
+
+// });
+
+
+function validate_guest_plates_must_equal_guest_count() {
+    console.log(['validate_guest_plates_must_equal_guest_count', guest_count, get_total_meal_plates()]);
+    const _return = parseInt(guest_count) === get_total_meal_plates();
+
+    const $error_msg = $('.entree-number-of-guest-plates + .validation-error-message').hide();
+
+    if( _return )
+        $error_msg.hide();
+    else
+        $error_msg.show();
+
+    return _return;
+}

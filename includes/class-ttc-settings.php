@@ -62,6 +62,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Settings' ) ) {
 
             $this->general['limit_number_of_bookings_per_day'] = get_field('limit_number_of_bookings_per_day', 'option');
         }
+
     }
 
     function TTC_Settings() {

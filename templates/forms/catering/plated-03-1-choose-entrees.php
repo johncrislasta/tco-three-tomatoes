@@ -31,7 +31,12 @@ Number of entrees is decided by the number of plates added for each entree
             </label>
             <label>
                 Number of plates
-                <input type="number" class="entree-number-of-guest-plates" name="num_of_guest_plates_for_<?php echo $entree_title ?>" min="0" data-dish_name="<?php echo $entree['name'] ?>"/>
+                <input type="number" class="entree-number-of-guest-plates" name="num_of_guest_plates_for_<?php echo $entree_title ?>"
+                       min="0"
+                       data-dish_name="<?php echo $entree['name'] ?>"
+                       data-custom_validation="validate_guest_plates_must_equal_guest_count"
+                       data-custom_validation_message="Number of guest plates must match number of guests"
+                />
             </label>
         </div>
 

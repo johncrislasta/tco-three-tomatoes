@@ -32,6 +32,12 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookable' ) ) {
 
         public $order_id;
         public $customer;
+        public $custom_order_details;
+
+        public $venue_contact_person;
+        public $venue_contact_number;
+        public $event_name;
+        public $event_theme;
 
         public $notes;
         public $private_notes;
@@ -88,6 +94,22 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookable' ) ) {
 
             if( $this->order_id )
                 update_field('order_id', $this->order_id, $this->post->ID );
+
+            if( $this->custom_order_details )
+                update_field('custom_order_details', $this->custom_order_details, $this->post->ID );
+
+            if( $this->venue_contact_person )
+                update_field('venue_contact_person', $this->venue_contact_person, $this->post->ID );
+
+            if( $this->venue_contact_number )
+                update_field('venue_contact_number', $this->venue_contact_number, $this->post->ID );
+
+            if( $this->event_name )
+                update_field('event_name', $this->event_name, $this->post->ID );
+
+            if( $this->event_theme )
+                update_field('event_name', $this->event_theme, $this->post->ID );
+
         }
 
         public function get_start_date()

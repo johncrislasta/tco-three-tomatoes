@@ -25,5 +25,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Catering' ) ) {
         public static $post_type = 'catering';
 
         public static $ERROR_WRONG_POST_TYPE = 882100; // 882 is a prefix for TTC, 100 is for Catering
+
     }
 }

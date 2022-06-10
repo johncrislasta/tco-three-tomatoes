@@ -1,3 +1,6 @@
+<h3>What shall we call this event?</h3>
+<input id="event-name-input" name="event_name" type="text" placeholder="Give this event a name" required >
+
 <h3>What is the occasion?</h3>
 <select name="occasion" id="occasion-select">
     <option value="">Choose occasion</option>
@@ -9,6 +12,9 @@
     <option value="other">Other</option>
 </select>
 <input name="occasion_other" id="occasion-other" class="other-input" type="text" placeholder="What's the occasion?"/>
+
+<h3>What is the theme for this event?</h3>
+<input id="event-theme-input" name="event_theme" type="text" placeholder="Back in time, Garden party, Slumber Party" required >
 
 <h3>How many guests are we expecting?</h3>
 <input id="number-guest-input" name="number_of_guests" type="number" min="10" placeholder="10" required >

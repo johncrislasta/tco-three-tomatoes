@@ -69,8 +69,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Front' ) ) {
                     'settings'      => array( 'delivery' => TTC_Settings()->delivery, 'catering' => TTC_Settings()->catering ),
                     'currency'      => get_option( 'woocommerce_currency' ),
                     'currency_symbol' => get_woocommerce_currency_symbol()
-
-
                 ));
 
 

@@ -513,6 +513,16 @@ div#plated_meal_order_details {
     display: none;
     width: 100%;
   }
+
+  input[type=text] {
+    width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 18px;
+  }
 }
 
 span.flatpickr-day.flatpickr-disabled {

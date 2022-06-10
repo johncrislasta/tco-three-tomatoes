@@ -407,14 +407,25 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                         $post_id = wp_insert_post($new_post);
 
                         $catering = new Catering($post_id);
-                        $catering->start_date = $catering_order['catering_date'];
-                        $catering->start_time = $catering_order['plate_meal_guest_arrival_time'];
-                        $catering->end_date = $catering_order['catering_date'];
-                        $catering->end_time = $catering_order['plate_meal_guest_departure_time'];
-                        $catering->number_of_guests = $catering_order['number_of_guests'];
-                        $catering->order_id = $order_id;
+                        $catering->start_date           = $catering_order['catering_date'];
+                        $catering->start_time           = $catering_order['plate_meal_guest_arrival_time'];
+                        $catering->end_date             = $catering_order['catering_date'];
+                        $catering->end_time             = $catering_order['plate_meal_guest_departure_time'];
+                        $catering->number_of_guests     = $catering_order['number_of_guests'];
+                        $catering->number_of_guests     = $catering_order['venue_contact_person'];
+                        $catering->number_of_guests     = $catering_order['venue_contact_number'];
+                        $catering->number_of_guests     = $catering_order['event_name'];
+                        $catering->number_of_guests     = $catering_order['event_name'];
+                        $catering->order_id             = $order_id;
+                        $catering->customer             = get_current_user_id();
+                        $catering->custom_order_details = $_SESSION['ttc_plated_meal_progress'];
 
                         $catering->save();
+
+                        update_field('catering_details', $_SESSION['ttc_plated_meal_progress'], $order_id);
+
+                        // Add plated meal progress post meta for the order
+                        update_post_meta( $order_id, 'ttc_plated_meal_progress', $_SESSION['ttc_plated_meal_progress'] );
 
                     }
 

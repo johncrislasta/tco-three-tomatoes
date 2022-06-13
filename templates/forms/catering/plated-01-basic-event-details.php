@@ -14,7 +14,7 @@
 <input name="occasion_other" id="occasion-other" class="other-input" type="text" placeholder="What's the occasion?"/>
 
 <h3>What is the theme for this event?</h3>
-<input id="event-theme-input" name="event_theme" type="text" placeholder="Back in time, Garden party, Slumber Party" required >
+<input id="event-theme-input" name="event_theme" type="text" placeholder="e.g. Back in time, Garden party, Slumber Party" required >
 
 <h3>How many guests are we expecting?</h3>
 <input id="number-guest-input" name="number_of_guests" type="number" min="10" placeholder="10" required >
@@ -30,3 +30,9 @@
     <option value="other">Other</option>
 </select>
 <input name="venue_other" id="venue-other" class="other-input" type="text" placeholder="Where's the venue?"/>
+
+<h3>Who is the person in charge at this venue?</h3>
+<input id="venue-contact-person-input" name="venue_contact_person" type="text" placeholder="Name of the person to contact at the venue" required >
+
+<h3>What is the contact number of that person?</h3>
+<input id="venue-contact-name-input" name="venue_contact_number" type="text" placeholder="Give the contact number of that venue representative" required >

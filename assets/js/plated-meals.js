@@ -739,8 +739,10 @@ const $ = jQuery;
         }
     });
 
+    /*
     //- Selection of Plated Meals - Modal function -//
     const tc_modal = document.querySelector('.plated-modal-box');
+    //const tc_modal_selector = document.querySelector('.plated-modal-box').attr('modal-for');
     const tc_open_modal = document.querySelector('.tc-modal-open');
     const tc_close_modal = document.querySelector('.tc-modal-close');
 
@@ -750,6 +752,24 @@ const $ = jQuery;
     tc_close_modal.addEventListener('click', () => {
         tc_modal.close();
     })
+    tc_modal.addEventListener('click', () => {
+        tc_modal.close();
+    })
+    */
+
+    // Modal Function jQuery
+
+    $(".meal-item .tc-modal-open").click(function(){
+       var modal_for = $(this).attr('modal-for');
+       console.log("selected modal for: " + modal_for);
+
+       $('.meal-plated-selection-wrapper .modal-backdrop[modal-for=' + modal_for + ']').removeClass('hidden');
+    });
+
+    $(".modal-backdrop").click(function(){
+       $(this).addClass("hidden");
+
+    });
 
 
     // Store progress in localStorage

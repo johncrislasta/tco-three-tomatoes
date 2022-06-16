@@ -68,12 +68,14 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\API_Events' ) ) {
 
             $event_posts = Bookables::get_upcoming([Catering::$post_type, Delivery::$post_type, Reservation::$post_type], $start, $end);
 
+//            Acme::diep($event_posts);
+
             $events = array();
 
             foreach ( $event_posts as $event ) {
                 $bookable = Bookables::get_model($event);
 
-                $events[] = array(
+                $event_details = array(
                     "id" => "$event->ID",
                     "className" => "{$event->post_type}-event",
                     'title' => "#{$event->ID} {$event->post_title}, {$bookable->get_customer_name()}, {$bookable->get_number_of_guests()}",
@@ -82,6 +84,11 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\API_Events' ) ) {
                     'end'   => date_i18n('Y-m-d', strtotime( $bookable->get_end_date() ) )
                         . "T" . date_i18n('h:i:s', strtotime( $bookable->get_end_time() ) )
                 );
+
+                if($bookable->post->post_type == 'delivery')
+                    $event_details['title'] = "{$event->post_title}";
+
+                $events[] = $event_details;
 
 //                Acme::diep($bookable, false);
             }

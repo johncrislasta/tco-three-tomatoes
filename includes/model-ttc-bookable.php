@@ -64,11 +64,25 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookable' ) ) {
 
                 $this->end_date = get_field('end_date', $this->post->ID );
                 $this->end_time = get_field('end_time', $this->post->ID );
+
+
+                $this->customer_name = get_field('customer_name', $this->post->ID );
+                $this->number_of_guests = get_field('number_of_guests', $this->post->ID );
+
+                $this->order_id = get_field('order_id', $this->post->ID );
+                $this->customer = get_field('customer', $this->post->ID );
+                $this->custom_order_details = get_field('custom_order_details', $this->post->ID );
+
+                $this->venue_contact_person = get_field('venue_contact_person', $this->post->ID );
+                $this->venue_contact_number = get_field('venue_contact_number', $this->post->ID );
+                $this->event_name = get_field('event_name', $this->post->ID );
+                $this->event_theme = get_field('event_theme', $this->post->ID );
+
             }
 
 //            Acme::diep([$this->start_date, $this->start_time, $this->end_date, $this->end_time], false);
 
-//            add_action( 'wp_insert_post', array( $this, 'new_bookable' ), 10, 3 );
+//            add_action( 'wp_insert_post', array7( $this, 'new_bookable' ), 10, 3 );
 
         }
 

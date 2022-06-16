@@ -79,12 +79,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Admin' ) ) {
 
             wp_localize_script('tco_ttc_admin_js',
                 'tco_ttc_js', array(
-                'tco_ttc_url'   => get_bloginfo('url'),
-                'ajaxurl'       => admin_url('admin-ajax.php'),
-                'uploading'     => __("Uploading", "tco_ttc_checkout"),
-                'processing'    => __("Processing, please wait", "tco_ttc_checkout"),
-                'error'         => __("An error occured. Please try again", "tco_ttc_checkout"),
-                'loading_image' => TTC_URL.'/assets/img/update.gif'
+                'tco_ttc_url'       => get_bloginfo('url'),
+                'ajaxurl'           => admin_url('admin-ajax.php'),
+                'uploading'         => __("Uploading", "tco_ttc_checkout"),
+                'processing'        => __("Processing, please wait", "tco_ttc_checkout"),
+                'error'             => __("An error occured. Please try again", "tco_ttc_checkout"),
+                'loading_image'     => TTC_URL.'/assets/img/update.gif',
+                'delivery_portal'   => get_field( 'delivery_portal_url', 'option' ),
             ));
 
             // I recommend to add additional conditions just to not to load the scripts on each page

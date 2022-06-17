@@ -1,4 +1,9 @@
 const $ = jQuery;
+
+const $plated_meal_form = $('#plated_meal_form');
+
+if( $plated_meal_form.length ){
+
 // jQuery(function($){
 
     const $product_gallery = $('.woocommerce-product-gallery');
@@ -7,7 +12,7 @@ const $ = jQuery;
 
     $product_gallery.append($plated_meal_order_details);
 
-    // @TODO: Make this dynamic and based from woocommerce_currency_symbol
+// @TODO: Make this dynamic and based from woocommerce_currency_symbol
     let currency_symbol = tco_ttc_js.currency_symbol;
 
     let order_details = {};
@@ -31,7 +36,7 @@ const $ = jQuery;
         else
             $plated_meal_order_detail_price.hide();
 
-        $plated_meal_order_detail_total_price.html( currency_symbol + ' ' + detail_price * guest_count );
+        $plated_meal_order_detail_total_price.html( currency_symbol + ' ' + (detail_price * guest_count).toFixed(2) );
         $plated_meal_order_detail_item_price.html( currency_symbol + ' ' + detail_price);
         $plated_meal_order_detail_guest_count.html( guest_count );
 
@@ -158,7 +163,7 @@ const $ = jQuery;
         console.log(['RUNNING TOTAL OBJECT', running_total_object]);
         let price = sum(running_total_object);
 
-        price = get_calculated_price();
+        price = get_calculated_price().toFixed(2);
 
         let $price_html = `<span class="woocommerce-Price-amount amount">
             <bdi>
@@ -179,12 +184,12 @@ const $ = jQuery;
         // update_product_price();
     }
 
-    // Running plated meal order calculation
+// Running plated meal order calculation
     let guest_count;
 
-    // ------------------------------- //
-    // UX for Venue and Occasion
-    // ------------------------------- //
+// ------------------------------- //
+// UX for Venue and Occasion
+// ------------------------------- //
 
     $('#occasion-select, #venue-select').change(function(){
         if( $(this).val() === 'other' ) {
@@ -194,9 +199,9 @@ const $ = jQuery;
         }
     });
 
-    // ------------------------------- //
-    // Update Guest Count Detail
-    // ------------------------------- //
+// ------------------------------- //
+// Update Guest Count Detail
+// ------------------------------- //
 
     $('#number-guest-input[type=number]').change(function () {
         update_plated_meal_order_details('plate-meal-guest-count', 'Number of Guests: ', $(this).val() );
@@ -214,9 +219,9 @@ const $ = jQuery;
     });
 
 
-    // ------------------------------- //
-    // Update Delivery Date
-    // ------------------------------- //
+// ------------------------------- //
+// Update Delivery Date
+// ------------------------------- //
 
     const $catering_datepicker = $('#catering_datepicker');
 
@@ -242,9 +247,9 @@ const $ = jQuery;
 
     console.log(['catering_datepicker_options', catering_datepicker_options]);
 
-    // ------------------------------- //
-    // Update Guest Arrival Time
-    // ------------------------------- //
+// ------------------------------- //
+// Update Guest Arrival Time
+// ------------------------------- //
 
     let guest_arrival_hour = '00';
     let guest_arrival_minute = '00';
@@ -271,9 +276,9 @@ const $ = jQuery;
         store_progress('plate_meal_guest_arrival_time', guest_arrival_time);
     }
 
-    // ------------------------------- //
-    // Update Guest Departure Time
-    // ------------------------------- //
+// ------------------------------- //
+// Update Guest Departure Time
+// ------------------------------- //
 
     let guest_departure_hour = '00';
     let guest_departure_minute = '00';
@@ -301,9 +306,9 @@ const $ = jQuery;
 
     }
 
-    // ------------------------------- //
-    // Update Selected Meal
-    // ------------------------------- //
+// ------------------------------- //
+// Update Selected Meal
+// ------------------------------- //
 
     const $choose_entrees       = $('#plated-choose-entrees');
     const $choose_hors_doeuvres = $('#plated-choose-hors-doeuvres');
@@ -460,9 +465,9 @@ const $ = jQuery;
     });
 
 
-    // ------------------------------- //
-    // Filter number of entree guest plates
-    // ------------------------------- //
+// ------------------------------- //
+// Filter number of entree guest plates
+// ------------------------------- //
     /*
     Algorithm:
     Initialize an object, meal_plates, that takes in the meal id as key and an object array as value.
@@ -525,7 +530,7 @@ const $ = jQuery;
         return parseFloat( str.replace( /^\D+/g, '') );
     }
 
-    // Update the max attribute of each guest plate field when one gets changed
+// Update the max attribute of each guest plate field when one gets changed
     $choose_entrees.on('change', '.entree-number-of-guest-plates', function(){
         let total_plates_entered = 0;
 
@@ -567,11 +572,11 @@ const $ = jQuery;
         })
     }
 
-    // ------------------------------- //
-    // Limit meal part checkboxes selection
-    // ------------------------------- //
+// ------------------------------- //
+// Limit meal part checkboxes selection
+// ------------------------------- //
 
-    // implement choice limits on plated meals (or even buffets)
+// implement choice limits on plated meals (or even buffets)
     $choose_hors_doeuvres.on('change', "input[type=checkbox]", function () {
 
         let input_name = $(this).attr("name");
@@ -608,7 +613,7 @@ const $ = jQuery;
         update_plated_meal_order_details('plate-meal-selected-hors-doeuvres', 'Selected Hors D\'oeuvres: ', $(this).val(), $(this).closest('.choices').data('price'), 'plate-meal-selected-meal-set', selected_meal_set );
     });
 
-    // implement choice limits on plated meal parts
+// implement choice limits on plated meal parts
     $choose_desserts.on('change', "input[type=checkbox]", function () {
 
         var input_name = $(this).attr("name");
@@ -649,10 +654,10 @@ const $ = jQuery;
     // Show Secondary Content for Addons
     // ------------------------------- //
 
-    $('.addon > .question ~ .answer > input[type=radio]').change(function() {
+    $('.addon > .answers-container > .answer > input[type=radio]').change(function() {
 
         // Find Secondary Question container
-        let $secondary = $(this).parent().siblings('.secondary-question');
+        let $secondary = $(this).parents('.answers-container').siblings('.secondary-question');
 
         if( $(this).val() === $secondary.data('show_if') )
             $secondary.show();
@@ -663,7 +668,7 @@ const $ = jQuery;
         // Display Addon Choices
         // ------------------------------- //
 
-        let $question = $(this).parent().siblings('.question');
+        let $question = $(this).parents('.answers-container').siblings('.question');
 
         update_plated_meal_order_details('plate-meal-addon-' + $(this).attr('name'), 'Addon: ' + $question.text(), $(this).val(), $(this).data('price') );
 
@@ -675,13 +680,13 @@ const $ = jQuery;
     // Display Addon Secondary Choices
     // ------------------------------- //
 
-    $('.addon > .secondary-question > .question ~ .answer > input[type=radio]').change(function() {
+    $('.addon > .secondary-question > .answers-container > .answer > input[type=radio]').change(function() {
 
         // ------------------------------- //
         // Display Addon Choices
         // ------------------------------- //
 
-        let $question = $(this).parent().siblings('.question');
+        let $question = $(this).parents('.answers-container').siblings('.question');
 
         update_plated_meal_order_details('plate-meal-addon-' + $(this).attr('name'), 'Addon: ' + $question.text(), $(this).val(), $(this).data('price') );
 
@@ -728,7 +733,7 @@ const $ = jQuery;
 
     });
 
-    //- Active state of select hors doeuvres item-//
+//- Active state of select hors doeuvres item-//
 
     $(".hors_doeuvres-item").click(function(){
         console.log("hors_doeuvres clicked!");
@@ -757,22 +762,22 @@ const $ = jQuery;
     })
     */
 
-    // Modal Function jQuery
+// Modal Function jQuery
 
     $(".meal-item .tc-modal-open").click(function(){
-       var modal_for = $(this).attr('modal-for');
-       console.log("selected modal for: " + modal_for);
+        var modal_for = $(this).attr('modal-for');
+        console.log("selected modal for: " + modal_for);
 
-       $('.meal-plated-selection-wrapper .modal-backdrop[modal-for=' + modal_for + ']').removeClass('hidden');
+        $('.meal-plated-selection-wrapper .modal-backdrop[modal-for=' + modal_for + ']').removeClass('hidden');
     });
 
     $(".modal-backdrop").click(function(){
-       $(this).addClass("hidden");
+        $(this).addClass("hidden");
 
     });
 
 
-    // Store progress in localStorage
+// Store progress in localStorage
 
     let plated_meal_progress = {};
 
@@ -783,7 +788,7 @@ const $ = jQuery;
         }
     }
 
-    $('#plated_meal_form').on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
+    $plated_meal_form.on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
 
         const $input = $(this);
 
@@ -851,14 +856,14 @@ const $ = jQuery;
         }
     }
 
-    // store progress in localStorage before closing tab
+// store progress in localStorage before closing tab
     window.addEventListener('beforeunload', function (e) {
         e.preventDefault();
 
         localStorage.setItem('plated_meal_order', JSON.stringify(plated_meal_progress));
     });
 
-    // Ajax call on the Add to Cart button
+// Ajax call on the Add to Cart button
     $('#plated_meal_add_to_cart').click(function() {
         let data = {
             action: 'ttc_store_plated_meal_order_progress',
@@ -884,16 +889,17 @@ const $ = jQuery;
 // });
 
 
-function validate_guest_plates_must_equal_guest_count() {
-    console.log(['validate_guest_plates_must_equal_guest_count', guest_count, get_total_meal_plates()]);
-    const _return = parseInt(guest_count) === get_total_meal_plates();
+    function validate_guest_plates_must_equal_guest_count() {
+        console.log(['validate_guest_plates_must_equal_guest_count', guest_count, get_total_meal_plates()]);
+        const _return = parseInt(guest_count) === get_total_meal_plates();
 
-    const $error_msg = $('.entree-number-of-guest-plates + .validation-error-message').hide();
+        const $error_msg = $('.entree-number-of-guest-plates + .validation-error-message').hide();
 
-    if( _return )
-        $error_msg.hide();
-    else
-        $error_msg.show();
+        if( _return )
+            $error_msg.hide();
+        else
+            $error_msg.show();
 
-    return _return;
+        return _return;
+    }
 }

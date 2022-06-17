@@ -480,37 +480,26 @@ div#plated_meal_order_details {
       left: -10px;
     }
   }
-  .answer:nth-child(3) {
+
+  .answers-container {
     margin-bottom: 15px;
   }
-  .answer:nth-child(2) input:checked ~ img ~ span {
-    &:before {
-      content: '';
-      position: absolute;
-      height: 23px;
-      width: 23px;
-      top: 0;
-      left: -30px;
-      background: url(../img/check-selected.png);
-      background-size: contain;
+
+  .answer {
+    input:checked ~ span:before {
+        content: '';
+        position: absolute;
+        height: 23px;
+        width: 23px;
+        top: 0;
+        left: -30px;
+        background: url(../img/check-selected.png);
+        background-size: contain;
     }
-
-  }
-  .answer:nth-child(3) input:checked ~ img ~ span {
-
-    &:before {
-      content: '';
-      position: absolute;
-      height: 23px;
-      width: 23px;
-      top: 0;
-      left: -30px;
-      background: url(../img/close-circle.png);
-      background-size: contain;
+    &:nth-child(2) input:checked ~ span:before {
+      background-image: url(../img/close-circle.png);
     }
-
   }
-
 }
 
 #plated-addon-would-you-like-to-add-a-signature-drink .addon .secondary-question .answer input~span:before {
@@ -658,9 +647,9 @@ div#plated_meal_order_details {
   }
 
 
-  div#plated-addon-would-like-wine-service-at-your-guests-tables-during-your-meal .answer:nth-child(2) .label {
+  .addon .answer img + .label {
     position: relative;
-    left: 35px;
+    left: 32px;
   }
 
   input[type=text].other-input {

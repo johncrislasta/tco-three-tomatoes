@@ -53,7 +53,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Calendar_Admin' ) ) {
             add_menu_page(
                 __( 'Calendar', TTC_TEXT_DOMAIN ),
                 __( 'Calendar', TTC_TEXT_DOMAIN ),
-                'manage_options',
+                'manage_calendar',
                 'ttc-calendar',
                 array( $this, 'calendar_admin_page_contents' ),
                 'dashicons-schedule',

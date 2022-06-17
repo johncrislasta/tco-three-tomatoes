@@ -36,7 +36,21 @@ jQuery(function($){
 
     $(document).ready ( function() { $( ".datepicker" ).datepicker(); } );
     
-    //Report Funcionality - End
+    //Report funcionality - End
+
+    //Print functionality - Start
+    $(document).on('click', '[name="printnote"]', function( ) {
+        
+          var fr = document.createElement('iframe');
+          fr.style='height: 0px; width: 0px; position: absolute';
+          document.body.appendChild(fr); 
+          $('link, style').clone().appendTo(fr.contentDocument.body);          
+          $('#booking_feed_print').clone().show().appendTo(fr.contentDocument.body);
+          fr.contentWindow.print();
+          fr.parentElement.removeChild(fr);
+
+    } );
+    //Print functionality - End
 
     const $calendarEl = $('#ttc_calendar');
     const calendar = new FullCalendar.Calendar($calendarEl[0], {

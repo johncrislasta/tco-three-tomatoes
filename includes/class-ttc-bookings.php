@@ -24,7 +24,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookings' ) ) {
 
 	    public static $FEED_TYPE_NOTE  = 100;
 	    public static $FEED_TYPE_LOG   = 900;
-
+        
 		/**
          * The single instance of the class
          *
@@ -242,18 +242,22 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookings' ) ) {
             $logs = Booking_Logs::instance()->get_all_by_post( $this->get_bookable()->post->ID, -1 );
 
             $feed_count = 0;
-            // Feed will have timestamp_feedtype_uniqueSuffix
-            foreach( $logs as $log) {
-                $feed_count++;
-                $feed_key = $this->get_feed_key($log->date_created, 'log', $feed_count);
-                $feed[ $feed_key ] = [
-                    'user'      => $log->get_user_name(),
-                    'content'   => $log->text,
-                    'date'      => $log->get_date_created(),
-                    'type'      => 'log'
-                ];
-            }
+            
+            // Feed will have timestamp_feedtype_uniqueSuffix                                                
 
+            foreach( $logs as $log) {
+                if (  Role_Admin::instance()->is('administrator') || $log->type !== 'added_private_booking_note' || $log->user_id ==  Role_Admin::instance()->user() ) {
+                    $feed_count++;
+                    $feed_key = $this->get_feed_key($log->date_created, 'log', $feed_count);
+                    $feed[ $feed_key ] = [
+                        'user'      => $log->get_user_name(),
+                        'content'   => $log->text,
+                        'date'      => $log->get_date_created(),
+                        'type'      => 'log'
+                    ];
+                }
+            }
+            
             $bookable = $this->get_bookable();
 
             $notes = $bookable->get_notes();
@@ -272,21 +276,25 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookings' ) ) {
                 ];
             }
 
-            $private_notes = $bookable->get_private_notes();
+            $private_notes = $bookable->get_private_notes();            
 
             foreach( $private_notes as $note) {
                 $feed_count++;
                 $author = $note['author'];
                 $feed_key = $this->get_feed_key($note['date_sent'], 'note', $feed_count);
-                $feed[ $feed_key ] = [
-                    'user'      => $author['display_name'],
-                    'avatar'    => $author['user_avatar'],
-                    'content'   => $note['message'],
-                    'note_type' => $note['type'],
-                    'time_ago'  => Acme::get_time_ago( $note['date_sent'] ),
-                    'date'      => Acme::get_datetime_formatted( $note['date_sent'] ),
-                    'type'      => 'private note'
-                ];
+                
+                if (  Role_Admin::instance()->isMapped($note['type']) || $author['ID'] ==  Role_Admin::instance()->user() ) {
+                    $feed[ $feed_key ] = [
+                        'user'      => $author['display_name'],
+                        'avatar'    => $author['user_avatar'],
+                        'content'   => $note['message'],
+                        'note_type' => $note['type'],
+                        'time_ago'  => Acme::get_time_ago( $note['date_sent'] ),
+                        'date'      => Acme::get_datetime_formatted( $note['date_sent'] ),
+                        'type'      => 'private note'
+                    ];
+                }
+
             }
 
             krsort($feed);

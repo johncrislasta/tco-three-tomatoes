@@ -10,5 +10,5 @@
             <option value="On Site">for On Site</option>
         </select>
     </label>
-    <input type="submit" class="note_submit" name="note_submit" value="Send">
+    <input type="submit" class="note_submit" name="note_submit" value="Send"><input type="button" name="printnote" value="Print">
 </form>

@@ -49,17 +49,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Report_Table' ) ) {
             if ( !empty($_GET['search_type']) ) {
                 if ( !empty($_GET['search']) ) {
                     switch ($_GET['search_type']) {
-                        case 'name':
-                            $meta_query[] = ['key' => 'customer_name', 'value' => $_GET['search'], 'compare' => 'LIKE'];
-                        break;                        
-                        case 'venue':
-                            $args['tax_query'] = [
-                                ['taxonomy' => 'venue', 'field' => 'name', 'terms' => [ $_GET['search'] ] ]
-                            ];                            
-                        break;                        
+                        case 'venue':                                
                         case 'meal':
                             $meta_query[] = ['key' => 'custom_order_details', 'value' => $_GET['search'], 'compare' => 'LIKE']  ;                          
                         break;                        
+                        case 'name':
+                            $meta_query[] = ['key' => 'customer_name', 'value' => $_GET['search'], 'compare' => 'LIKE'];
+                        break;                                                
                         case 'event':
                             $meta_query[] = ['key' => 'event_name', 'value' => $_GET['search'], 'compare' => 'LIKE'];                            
                         break;                        

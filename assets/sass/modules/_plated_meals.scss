@@ -169,7 +169,7 @@
               top: 0;
               height: 20px;
               width: 20px;
-              background: url(/wp-content/uploads/2020/06/cropped-ThreeTomatoes_Favicon.png);
+              background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/tt-exclamation-mark-in-a-circle-orange.png);
               background-size: contain;
             }
           }
@@ -305,6 +305,10 @@ div#plated_meal_order_details {
   flex-wrap: wrap;
   gap: 1em;
 
+  .entree-item {
+    overflow: hidden;
+  }
+
   > div {
     padding: 1em;
     width: calc(50% - 1em);
@@ -313,7 +317,7 @@ div#plated_meal_order_details {
     flex-direction: column;
     border-radius: 6px;
     position: relative;
-    overflow: hidden;
+
 
     img {
       aspect-ratio: 1/1;
@@ -322,9 +326,51 @@ div#plated_meal_order_details {
   }
 }
 
+#plated_meal_form {
+
+  .plated-meals-input-wrapper h3 {
+    margin-top: 0;
+  }
+  .plated-meals-input-wrapper input {
+    margin-bottom: 40px;
+  }
+  .plated-meals-input-wrapper select {
+    margin-bottom: 40px;
+  }
+
+  .plated-meals-input-wrapper .validation-error-message {
+    background: none;
+    bottom: 5px;
+    z-index: auto;
+    color: #309e9b;
+    padding-left: 40px;
+    font-size: 14px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      height: 20px;
+      width: 20px;
+      background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/tt-exclamation-mark-in-a-circle-orange.png);
+      background-size: contain;
+      transform: translateY(-50%);
+    }
+
+  }
+
+}
+/* Booking Form */
+.plated {
+  &-meals-input-wrapper {
+    position: relative;
+  }
+}
+
 .validation-error-message {
   position: absolute;
-  background-color: orange;
+  background-color: #FF7518;
   padding: 7px;
   line-height: 1;
   left: -7px;
@@ -335,6 +381,7 @@ div#plated_meal_order_details {
   bottom: 15px;
   padding-left: 20px;
 }
+
 
 .plated-meal-order-detail-price {
   float: right;
@@ -402,7 +449,7 @@ div#plated_meal_order_details {
       width: 23px;
       top: 0;
       left: -30px;
-      background: url(../img/unselected-circle.png);
+      background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-unselected.png);
       background-size: contain;
     }
   }
@@ -416,7 +463,7 @@ div#plated_meal_order_details {
         width: 23px;
         top: 0;
         left: -30px;
-        background: url(../img/check-selected.png);
+        background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
         background-size: contain;
       }
     }
@@ -646,6 +693,63 @@ span.flatpickr-day.flatpickr-disabled {
     box-shadow: 0 4px 10px 0 rgba(0 0 0 / 0.25);
     z-index: 1;
     line-height: 1.4;
+  }
+
+}
+
+/* TERMS AND CONDITIONS */
+input#accept_terms_conditions {
+  display: none;
+  &:checked ~ span:before {
+    background: url(/wp-content/plugins/tco-three-tomatoes/assets/img/check-selected.png);
+    content: '';
+    position: absolute;
+    height: 23px;
+    width: 23px;
+    top: 0;
+    left: -33px;
+    background-size: contain;
+  }
+}
+#tc-content {
+  margin-left: 33px;
+  font-size: 16px;
+  line-height: 1.43;
+  display: block;
+  position: relative;
+  margin-top: 25px;
+    &:before {
+      content: '';
+      position: absolute;
+      height: 23px;
+      width: 23px;
+      top: 0;
+      left: -33px;
+      background: url(../img/check-unselected.png);
+      background-size: contain;
+    }
+}
+div#plated-terms-conditions a {
+  display: inline-block;
+  padding: 15px 25px;
+  background: #309e9b;
+  color: #fff;
+  padding-left: 57px;
+  border-radius: 5px;
+  position: relative;
+  border: 2px solid #309e9b;
+
+  &:hover {
+    background-color: #fff;
+    color: rgb(48,158,155);
+  }
+
+  i.x-icon.tc-icon {
+    position: absolute;
+    left: 20px;
+    font-size: 30px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
 }

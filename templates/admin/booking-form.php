@@ -35,10 +35,16 @@
         <?php
         echo \TCo_Three_Tomatoes\Acme::get_template('admin/booking-feed', ['feed' => $feed]);
         ?>
-    </div>
+    </div>    
     <div id="booking_note_form" class="tab-content">
         <?php
         echo \TCo_Three_Tomatoes\Acme::get_template('forms/booking-notes');
         ?>
     </div>
+</div>
+
+<div id="booking_feed_print">
+    <?php
+    echo \TCo_Three_Tomatoes\Acme::get_template('admin/booking-feed-print', ['feed' => $feed]);
+    ?>
 </div>

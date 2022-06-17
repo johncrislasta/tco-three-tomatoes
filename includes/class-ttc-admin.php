@@ -66,6 +66,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Admin' ) ) {
 
 			//Load dialogs
 
+            wp_enqueue_script( 'jquery-ui-datepicker' );
+            wp_register_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css' );
+            wp_enqueue_style( 'jquery-ui' );
+
             wp_enqueue_style('tco_ttc_vendor_fullcalendar_css', TTC_ASSETS . 'vendor/fullcalendar/css/main.min.css', false, TTC_VERSION);
             wp_enqueue_script('tco_ttc_vendor_fullcalendar_js', TTC_ASSETS . 'vendor/fullcalendar/js/main.min.js', array('jquery'), '', true);
 
@@ -144,6 +148,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Admin' ) ) {
             if (!session_id()) {
                 session_start();
             }
+        }
+
+        public function current_url ( $args = [] ) {
+             return admin_url( sprintf('admin.php?%s', http_build_query(array_merge($_GET, $args) ) ) );
         }
 	}
 

@@ -18,8 +18,10 @@ include_once 'model-ttc-reservation.php';
 include_once 'model-ttc-booking-log.php';
 
 include_once 'class-ttc-front.php';
+include_once 'class-ttc-admin-role.php';
 include_once 'class-ttc-admin.php';
 include_once 'class-ttc-admin-calendar.php';
+include_once 'class-ttc-admin-report.php';
 include_once 'class-ttc-bookings.php';
 include_once 'class-ttc-booking-logs.php';
 include_once 'class-ttc-plated-meal.php';

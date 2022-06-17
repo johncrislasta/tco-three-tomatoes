@@ -51,6 +51,8 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
             add_action('woocommerce_thankyou', array($this, 'create_catering_post'), 10, 1);
 
+            add_action('woocommerce_order_details_after_order_table', array($this, 'display_order_details'), 10, 1);
+
             $this->product_id = get_field('catering_plated_meal_product_id', 'option');
 
             add_action('wp_ajax_ttc_get_plated_meal_parts', array( $this, 'get_meal_parts' ) );
@@ -119,10 +121,12 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             return $addons;
         }
 
-        public function print_form()
+        public function print_form( $product_id = null )
         {
+            $product_id = $product_id ?: get_the_ID();
 
-            if( get_the_ID() != $this->product_id ) return;
+//            Acme::diep([$product_id, get_the_ID(), $this->product_id]);
+            if( $product_id != $this->product_id ) return;
 
             // Remove Add To Cart
             remove_action( 'woocommerce_simple_add_to_cart', 'woocommerce_simple_add_to_cart', 30 );
@@ -412,10 +416,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                         $catering->end_date             = $catering_order['catering_date'];
                         $catering->end_time             = $catering_order['plate_meal_guest_departure_time'];
                         $catering->number_of_guests     = $catering_order['number_of_guests'];
-                        $catering->number_of_guests     = $catering_order['venue_contact_person'];
-                        $catering->number_of_guests     = $catering_order['venue_contact_number'];
-                        $catering->number_of_guests     = $catering_order['event_name'];
-                        $catering->number_of_guests     = $catering_order['event_name'];
+                        $catering->venue_contact_person = $catering_order['venue_contact_person'];
+                        $catering->venue_contact_number = $catering_order['venue_contact_number'];
+                        $catering->event_name           = $catering_order['event_name'];
+                        $catering->event_theme          = $catering_order['event_theme'];
                         $catering->order_id             = $order_id;
                         $catering->customer             = get_current_user_id();
                         $catering->custom_order_details = $_SESSION['ttc_plated_meal_progress'];
@@ -437,6 +441,73 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 // Flag the action as done (to avoid repetitions on reload for example)
                 $order->update_meta_data( '_thankyou_action_done', true );
                 $order->save();
+            }
+        }
+
+        function display_order_details($order) {
+//            Acme::diep($order->items);
+            foreach ( $order->items as $order_item ) {
+                if( $this->product_id != $order_item->get_product_id() ) continue;
+//                Acme::diep( [ $this->product_id, $order_item->get_product_id(), $order->id ] );
+
+                // Retrieve catering by order id
+//                Acme::diep( $order->id );
+
+                $args = array(
+                    'post_type'  => 'catering',
+                    'meta_query' => array(
+                        array(
+                            'key'     => 'order_id',
+                            'value'   => $order->id,
+                            'compare' => '=',
+                        ),
+                    ),
+                );
+                $query = new \WP_Query( $args );
+
+
+                foreach ( $query->posts as $post ) {
+                    $catering = new Catering( $post->ID );
+//                    Acme::diep([$post->ID, $catering->custom_order_details]);
+
+                     echo "<h2>Catering Details</h2>";
+
+                    $exclude = array(
+                        'catering_datepicker',
+                        'guest_arrival_hour',
+                        'guest_arrival_min',
+                        'guest_arrival_ampm',
+                        'guest_departure_hour',
+                        'guest_departure_min',
+                        'guest_departure_ampm',
+                        'product_id',
+                        'regular_price',
+                        'accept_terms_conditions',
+                    );
+
+                    foreach ( $catering->custom_order_details as $key => $value ) {
+
+                        if( in_array( $key, $exclude) ) continue;
+
+                        $key = str_replace( ['-', '_'], ' ', $key );
+                        $key = ucwords($key);
+
+                        if( is_array($value) )
+                            $value = implode( ', ', $value );
+
+                        $value = str_replace( ['-', '_'], ' ', $value );
+                        $value = ucfirst($value);
+
+                        $item_data[] = array(
+                            'key' => $key,
+                            'value' => $value
+                        );
+
+                        echo "<p><strong>$key</strong>: $value</p>";
+                    }
+
+                }
+
             }
         }
     }

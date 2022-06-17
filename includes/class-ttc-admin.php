@@ -66,6 +66,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Admin' ) ) {
 
 			//Load dialogs
 
+            wp_enqueue_script( 'jquery-ui-datepicker' );
+            wp_register_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css' );
+            wp_enqueue_style( 'jquery-ui' );
+
             wp_enqueue_style('tco_ttc_vendor_fullcalendar_css', TTC_ASSETS . 'vendor/fullcalendar/css/main.min.css', false, TTC_VERSION);
             wp_enqueue_script('tco_ttc_vendor_fullcalendar_js', TTC_ASSETS . 'vendor/fullcalendar/js/main.min.js', array('jquery'), '', true);
 
@@ -79,12 +83,13 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Admin' ) ) {
 
             wp_localize_script('tco_ttc_admin_js',
                 'tco_ttc_js', array(
-                'tco_ttc_url'   => get_bloginfo('url'),
-                'ajaxurl'       => admin_url('admin-ajax.php'),
-                'uploading'     => __("Uploading", "tco_ttc_checkout"),
-                'processing'    => __("Processing, please wait", "tco_ttc_checkout"),
-                'error'         => __("An error occured. Please try again", "tco_ttc_checkout"),
-                'loading_image' => TTC_URL.'/assets/img/update.gif'
+                'tco_ttc_url'       => get_bloginfo('url'),
+                'ajaxurl'           => admin_url('admin-ajax.php'),
+                'uploading'         => __("Uploading", "tco_ttc_checkout"),
+                'processing'        => __("Processing, please wait", "tco_ttc_checkout"),
+                'error'             => __("An error occured. Please try again", "tco_ttc_checkout"),
+                'loading_image'     => TTC_URL.'/assets/img/update.gif',
+                'delivery_portal'   => get_field( 'delivery_portal_url', 'option' ),
             ));
 
             // I recommend to add additional conditions just to not to load the scripts on each page
@@ -143,6 +148,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Admin' ) ) {
             if (!session_id()) {
                 session_start();
             }
+        }
+
+        public function current_url ( $args = [] ) {
+             return admin_url( sprintf('admin.php?%s', http_build_query(array_merge($_GET, $args) ) ) );
         }
 	}
 

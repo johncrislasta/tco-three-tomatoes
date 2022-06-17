@@ -1,0 +1,2 @@
+<a class="button button-primary" data-export-type="CSV" href="<?php echo \TCo_Three_Tomatoes\Admin::instance()->current_url(['export' => 'CSV']); ?>" > <?php esc_html_e( 'Export CSV', TTC_TEXT_DOMAIN ); ?></a> 
+<a class="button button-primary" data-export-type="PDF" href="<?php echo \TCo_Three_Tomatoes\Admin::instance()->current_url(['export' => 'PDF']); ?>" > <?php esc_html_e( 'Export PDF', TTC_TEXT_DOMAIN ); ?></a>

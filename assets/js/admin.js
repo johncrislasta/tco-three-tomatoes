@@ -1,4 +1,43 @@
 jQuery(function($){
+    
+
+    //Report Funcionality - Start
+
+    dateOptions = {changeMonth: true};
+
+    start_date = $( ".datepicker_start" ).datepicker( dateOptions ).on( "change", function() {
+                    end_date.datepicker( "option", "minDate", getDate( this ) );
+                    range_submit(end_date.get(0), this);
+                });
+
+    end_date = $( ".datepicker_end" ).datepicker(  dateOptions ).on( "change", function() {
+                    start_date.datepicker( "option", "maxDate", getDate( this ) );
+                    range_submit(start_date.get(0), this);
+                });
+
+    function getDate( element ) {
+        var date;
+        try {
+            date = $.datepicker.parseDate( "MM dd, yy", element.value );
+        } catch( error ) {
+            date = null;
+        }
+
+        return date;
+    }
+
+    function range_submit(el1, el2) {
+        if ( el1.value !== '' && el2.value !== '' ) {
+            $(el1).closest('form').trigger('submit');
+        }
+    }
+
+    $(document).on('change', '[name="filter_type"]', function() { $(this).closest('form').trigger('submit'); } );
+
+    $(document).ready ( function() { $( ".datepicker" ).datepicker(); } );
+    
+    //Report Funcionality - End
+
     const $calendarEl = $('#ttc_calendar');
     const calendar = new FullCalendar.Calendar($calendarEl[0], {
         initialView: 'dayGridMonth',
@@ -38,9 +77,9 @@ jQuery(function($){
         },
 
     });
-    calendar.render();
-
+    calendar.render();   
 
     // inline editable
 
 });
+

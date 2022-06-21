@@ -61,6 +61,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             add_action('wp_ajax_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
             add_action('wp_ajax_nopriv_ttc_store_plated_meal_order_progress', array( $this, 'store_plated_meal_order_progress' ) );
 
+            // @TODO: move this to another class
+            add_action('wp_ajax_ttc_files_upload', array( $this, 'upload_files' ) );
+            add_action('wp_ajax_nopriv_ttc_files_upload', array( $this, 'upload_files' ) );
+
         }
 
         /**
@@ -156,9 +160,12 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                         }
                     }
 
+                    $module_header = $module['header'] ? ": {$module['header']}" : '';
+
                     $addon_slides[] = array(
                         'id'        => 'plated-addon-' . $module['question_slug'],
-                        'header'    => 'Add-on',
+                        'header'    => 'Add-on' . $module_header,
+                        'classes'   => 'addons',
                         'content'   => Acme::get_template("forms/addons/{$module['acf_fc_layout']}", $module ),
                     );
                 }
@@ -173,9 +180,12 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
                     $note[ 'question_slug' ] = sanitize_title( $note['question'] );
 
+                    $note_header = $note['header'] ? ": {$note['header']}" : '';
+
                     $notes_slides[] = array(
-                        'id'        => 'plated-notes-' . $module['question_slug'],
-                        'header'    => 'Notes',
+                        'id'        => 'plated-notes-' . $note['question_slug'],
+                        'header'    => 'Notes' . $note_header,
+                        'classes'   => 'notes',
                         'content'   => Acme::get_template("forms/fields/notes-textarea", $note ),
                     );
                 }
@@ -199,44 +209,64 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 array (
                     'id'        => 'plated-basic-event-details',
                     'header'    => 'Tell us about the event',
+                    'classes'   => 'event',
                     'content'   => Acme::get_template('forms/catering/plated-01-basic-event-details', array( 'venues' => $venues, 'occasions' => $occasions ) ),
                 ),
                 array (
                     'id'        => 'plated-schedule-date-times',
                     'header'    => 'When do you need it?',
+                    'classes'   => 'event',
                     'content'   => Acme::get_template('forms/catering/plated-02-schedule-date-times', array( 'disabled_dates' => Bookables::get_fully_booked_dates('Y-m-d' ) ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-meal-set',
-                    'header'    => 'Choose a meal:',
+                    'header'    => 'Choose a meal',
+                    'classes'   => 'meal',
                     'content'   => Acme::get_template('forms/catering/plated-03-0-choose-meal-set', array( 'plated_meals' => $meals_fields ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-entrees',
-                    'header'    => 'Choose Entrees:',
+                    'header'    => 'Choose Entrees',
+                    'classes'   => 'meal',
                     'content'   => Acme::get_template('forms/catering/plated-03-1-choose-entrees', array( 'meal' => false ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-hors-doeuvres',
-                    'header'    => 'Choose Hors D\'oeuvres:',
+                    'header'    => 'Choose Hors D\'oeuvres',
+                    'classes'   => 'meal',
                     'content'   => Acme::get_template('forms/catering/plated-03-2-choose-hors-doeuvres', array( 'meal' => false ) ),
                 ),
                 array (
                     'id'        => 'plated-choose-desserts',
-                    'header'    => 'Choose Desserts:',
+                    'header'    => 'Choose Desserts',
+                    'classes'   => 'meal',
                     'content'   => Acme::get_template('forms/catering/plated-03-3-choose-desserts', array( 'meal' => false ) ),
+                ),
+            );
+
+            $upload_file_slide = array (
+                array (
+                    'id'        => 'plated-upload-files',
+                    'header'    => 'Upload files',
+                    'content'   => Acme::get_template('forms/catering/plated-06-upload-files'),
                 ),
             );
 
             $final_slides = array (
                 array (
                     'id'        => 'plated-terms-conditions',
-                    'header'    => 'Terms and Conditions',
+                    'header'    => 'Almost there!',
                     'content'   => Acme::get_template('forms/catering/plated-07-terms-and-conditions-submit'),
                 ),
             );
 
-            $slides = array_merge($slides, $addon_slides, $notes_slides, $final_slides);
+            $slides = array_merge(
+                $upload_file_slide,
+                $slides,
+                $addon_slides,
+                $notes_slides,
+                $final_slides
+            );
 
             echo Acme::get_template('forms/slider-form',
                 [   'slides' => $slides,
@@ -249,12 +279,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 ] );
 //            echo Acme::get_template('forms/catering/plated-meals', array( 'plated_meals' => $fields ) );
         }
-
-        // @TODO: Hide original add to cart button.
-        //      Replace with a new add to cart button that calls an ajax function on click instead
-        //      This ajax function will return a redirect of ?add_to_cart={product_id} and has the SESSIONS populated
-
-        // @TODO: Add cart total details
 
 
         public function remove_add_to_cart() {
@@ -505,10 +529,80 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
                         echo "<p><strong>$key</strong>: $value</p>";
                     }
+                }
+            }
+        }
 
+        public function upload_files() {
+            $fileErrors = array(
+                0 => "There is no error, the file uploaded with success",
+                1 => "The uploaded file exceeds the upload_max_files in server settings",
+                2 => "The uploaded file exceeds the MAX_FILE_SIZE from html form",
+                3 => "The uploaded file uploaded only partially",
+                4 => "No file was uploaded",
+                6 => "Missing a temporary folder",
+                7 => "Failed to write file to disk",
+                8 => "A PHP extension stoped file to upload" );
+
+            $posted_data =  isset( $_POST ) ? $_POST : array();
+            $file_data = isset( $_FILES ) ? $_FILES : array();
+
+            $data = array_merge( $posted_data, $file_data );
+
+//            Acme::diep([
+//                'posted_data' => $posted_data,
+//                'file_data' => $file_data,
+//                'data' => $data,
+//                'FILES' => $_FILES
+//            ]);
+
+            $responses = array();
+            foreach( $_FILES as $key => $value ) {
+
+                $response = array();
+                $args = null;
+
+                if( isset( $data['label'] ) && $data['label'] != 'undefined' )
+                    $args = [ 'post_title' => $data['label'] ];
+
+                $attachment_id = media_handle_upload( $key, 0 , $args);
+
+//                Acme::diep([
+//                    $attachment_id
+//                ]);
+
+                if ( is_wp_error( $attachment_id ) ) {
+                    $response['response'] = "ERROR";
+                    $response['error'] = $attachment_id->errors[ 'upload_error' ];
+                    $response['message'] = "Unable to upload {$value['name']}";
+                } else {
+                    $fullsize_path = get_attached_file( $attachment_id );
+                    $pathinfo = pathinfo( $fullsize_path );
+                    $url = wp_get_attachment_url( $attachment_id );
+                    $response['response'] = "SUCCESS";
+                    $response['filename'] = $pathinfo['filename'];
+                    $response['url'] = $url;
+                    $response['attachment_id'] = $attachment_id;
+                    $type = $pathinfo['extension'];
+
+                    if( $type == "jpeg"
+                        || $type == "jpg"
+                        || $type == "png"
+                        || $type == "jfif"
+                        || $type == "bmp"
+                        || $type == "gif" ) {
+
+                        $type = "image";
+                    }
+
+                    $response['type'] = $type;
                 }
 
+                $responses[] = $response;
             }
+
+            echo json_encode( $responses );
+            die();
         }
     }
 

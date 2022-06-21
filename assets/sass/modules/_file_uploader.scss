@@ -1,0 +1,148 @@
+#upload-files-form {
+
+  .file-upload-container {
+    background-color: #ffffff;
+    width: 60%;
+    min-width: 450px;
+    position: relative;
+    margin: 50px auto;
+    padding: 50px 20px;
+    border-radius: 7px;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.05);
+    border: 2px dashed #ccc;
+
+    p {
+      text-align: center;
+      margin: 20px 0 30px 0;
+    }
+
+    &.file_drag_over{
+      color:#000;
+      border-color:#000;
+    }
+  }
+
+  input[type="file"]{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  label {
+    display: block;
+    position: relative;
+    background-color: #309e9a;
+    color: #ffffff;
+    font-size: 18px;
+    text-align: center;
+    width: 300px;
+    padding: 18px 0;
+    margin: auto;
+    border-radius: 5px;
+    pointer-events: none;
+  }
+
+  #images {
+    pointer-events: none;
+  }
+
+  #images,
+  #uploaded-files-container{
+    width: 100%;
+    position: relative;
+    margin: auto;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 0.5em;
+    flex-wrap: wrap;
+
+    figure{
+      width: calc(45% - 5em);
+
+      img{
+        width: 100%;
+      }
+    }
+    figcaption{
+      text-align: center;
+      font-size: 1.5vmin;
+      margin-top: 0.5vmin;
+    }
+  }
+
+}
+
+.file-ext-image {
+  aspect-ratio: 1/1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 2em 0 0;
+  align-items: baseline;
+  justify-content: center;
+  background: #ccc;
+  position: relative;
+  padding: 0 1em;
+}
+
+.file-ext-image:after {
+  content: '';
+  display: block;
+  border: 3px solid white;
+  width: 2em;
+  height: 2em;
+  position: absolute;
+  top: -.2em;
+  right: -.2em;
+}
+
+.file-ext-image span{
+  align-self: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 1em;
+  letter-spacing: 0.2em;
+}
+
+button.file-upload-button {
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #309e9a;
+  color: #fff;
+  margin-right: 10px;
+  padding: 10px 25px;
+  border: none;
+}
+
+button.file-upload-button[disabled] {
+  cursor: default;
+  pointer-events: none;
+  background: #ccc;
+}
+
+.uploaded-images {
+  display: flex;
+}
+
+
+
+#progress, #bar {
+  height: 30px;
+}
+#progress {
+  width: 300px;
+  border: 1px solid #000;
+}
+#bar {
+  width: 0;
+  background: #4286f4;
+  transition: width ease 0.3s;
+}
+
+.uploaded-files-container {
+  display: flex;
+}

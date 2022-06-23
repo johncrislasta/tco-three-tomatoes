@@ -261,10 +261,10 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
             );
 
             $slides = array_merge(
-                $upload_file_slide,
                 $slides,
                 $addon_slides,
                 $notes_slides,
+                $upload_file_slide,
                 $final_slides
             );
 

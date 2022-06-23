@@ -1,4 +1,7 @@
+const $ = jQuery;
+
 var catering_calendar;
+
 jQuery(function($){
 
     console.log(tco_ttc_js);

@@ -36,7 +36,6 @@ Number of entrees is decided by the number of plates added for each entree
                        data-dish_name="<?php echo $entree['name'] ?>"
                        data-custom_validation="validate_guest_plates_must_equal_guest_count"
                        data-custom_validation_message="Number of guest plates must match number of guests"
-                       data-custom_validation_message="Must match total number of guest"
                 />
             </label>
         </div>

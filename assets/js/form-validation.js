@@ -74,7 +74,7 @@ jQuery(function($){
 
         console.log('what is the custom validation?', $field.data('custom_validation'));
 
-        if( ! window[ $field.data('custom_validation') ]() ) {
+        if( ! window[ $field.data('custom_validation') ]($field) ) {
             $required_error_msg.show();
             $field.addClass('validation-failed' );
             return false;

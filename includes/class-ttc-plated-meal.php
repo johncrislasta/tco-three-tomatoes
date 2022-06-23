@@ -273,7 +273,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                     'data'=> [
                         'product_id' => $product_id,
                         'validation' => 'inline',
-                        'validation-trigger' => '.slide-next, .slide-prev'
+                        'validation-trigger' => '.slide-next, .slide-prev, .slider-quick-nav'
                     ],
                     'form_id' => 'plated_meal_form'
                 ] );
@@ -534,15 +534,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
         }
 
         public function upload_files() {
-            $fileErrors = array(
-                0 => "There is no error, the file uploaded with success",
-                1 => "The uploaded file exceeds the upload_max_files in server settings",
-                2 => "The uploaded file exceeds the MAX_FILE_SIZE from html form",
-                3 => "The uploaded file uploaded only partially",
-                4 => "No file was uploaded",
-                6 => "Missing a temporary folder",
-                7 => "Failed to write file to disk",
-                8 => "A PHP extension stoped file to upload" );
 
             $posted_data =  isset( $_POST ) ? $_POST : array();
             $file_data = isset( $_FILES ) ? $_FILES : array();

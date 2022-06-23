@@ -1,4 +1,4 @@
-const $ = jQuery;
+// const $ = jQuery;
 
 const $plated_meal_form = $('#plated_meal_form');
 
@@ -240,7 +240,7 @@ if( $plated_meal_form.length ){
             // console.log('catering flatpickr onchange listener', selectedDates, dateStr);
             // hide details for fields not affecting the pricing
             // update_plated_meal_order_details('plate-meal-event-date', 'Event Date: ', dateStr );
-            store_progress('catering_datepicker', dateStr);
+            store_progress('catering_datepicker', dateStr, 'Delivery Date');
         },
     };
     const catering_flatpickr = flatpickr("#catering_datepicker", catering_datepicker_options); // flatpickr
@@ -273,7 +273,7 @@ if( $plated_meal_form.length ){
     {
         guest_arrival_time = `${guest_arrival_hour}:${guest_arrival_minute} ${guest_arrival_ampm}`;
         // update_plated_meal_order_details('plate-meal-guest-arrival-time', 'Time guests arrive: ', guest_arrival_time );
-        store_progress('plate_meal_guest_arrival_time', guest_arrival_time);
+        store_progress('plate_meal_guest_arrival_time', guest_arrival_time, 'Guest Arrival Time');
     }
 
 // ------------------------------- //
@@ -302,7 +302,7 @@ if( $plated_meal_form.length ){
     {
         guest_departure_time = `${guest_departure_hour}:${guest_departure_minute} ${guest_departure_ampm}`;
         // update_plated_meal_order_details('plate-meal-guest-departure-time', 'Time guests depart: ', guest_departure_time );
-        store_progress('plate_meal_guest_departure_time', guest_departure_time );
+        store_progress('plate_meal_guest_departure_time', guest_departure_time, 'Guest Departure Time' );
 
     }
 
@@ -788,7 +788,7 @@ if( $plated_meal_form.length ){
         }
     }
 
-    $plated_meal_form.on('change', 'select, input[type=text], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
+    $plated_meal_form.on('change', 'select, input[type=text], input[type=tel], input[type=number], input[type=radio], input[type=checkbox], input[type=hidden], textarea', function() {
 
         const $input = $(this);
 
@@ -799,44 +799,48 @@ if( $plated_meal_form.length ){
 
             if( plated_meal_progress[input_name] === undefined  ) {
                 console.log('setting up array for plated meal progress ' + input_name );
-                plated_meal_progress[input_name] = [];
+                plated_meal_progress[input_name]['value'] = [];
             }
 
             if( $(this).is(':checked') ) {
                 console.log( [ 'checkbox is checked', input_name, plated_meal_progress[input_name], $(this).val() ] );
-                plated_meal_progress[input_name].push( $(this).val() );
+
+                store_progress(input_name, plated_meal_progress[input_name]['value'].push( $(this).val() ));
             } else {
 
                 const result = plated_meal_progress[input_name].filter(function(x) {
                     return x !== $input.val();
                 });
 
-                plated_meal_progress[input_name] = result;
+                store_progress(input_name, result);
+                // plated_meal_progress[input_name] = {value: result, };
                 console.log( [ 'checkbox not is checked', input_name, plated_meal_progress[input_name], $(this).val() ] );
 
             }
         }
-        else
-            plated_meal_progress[input_name] = $(this).val();
+        else {
+            store_progress(input_name, $(this).val());
+            // plated_meal_progress[input_name] = $(this).val();
+        }
         console.log(['PLATED MEAL PROGRESS from changed fields', plated_meal_progress]);
     });
 
-    function store_progress(name, value) {
-        plated_meal_progress[name] = value;
+    function store_progress(name, value, label = '', price = 0) {
+        plated_meal_progress[name] = {value: value, label: label, price: price};
         console.log(['PLATED MEAL PROGRESS from storing', plated_meal_progress]);
     }
 
     function retrieve_progress() {
         console.log(['PLATED MEAL PROGRESS from retrieving', plated_meal_progress]);
         for( const field in plated_meal_progress ) {
-            let value = plated_meal_progress[field];
+            let progress = plated_meal_progress[field];
 
             let $field = $(`[name=${field}]`);
 
             if($field.is('input[type=radio]'))
-                $(`[name=${field}][value="${value}"]`).click();
+                $(`[name=${field}][value="${progress.value}"]`).click();
             else if( $field.is('input[type=checkbox]' ) ) {
-                for ( const checkbox_value of value ) {
+                for ( const checkbox_value of progress.value ) {
                     console.log(`[name=${field}][value="${checkbox_value}"]`);
                     $(`[name=${field}][value="${checkbox_value}"]`).click();
                 }
@@ -845,13 +849,14 @@ if( $plated_meal_form.length ){
             else if(field === 'catering_date')
             {
                 console.log('field is Catering Date from flatpickr', catering_flatpickr);
-                let catering_date = new Date(value);
+                let catering_date = new Date(progress.value);
 
                 catering_flatpickr.setDate(catering_date, true);
             }
             else
             {
-                $field.val(value).change();
+                console.log('updating field value with change: ', $field, progress.value);
+                $field.val(progress.value).change();
             }
         }
     }
@@ -889,7 +894,7 @@ if( $plated_meal_form.length ){
 // });
 
 
-    function validate_guest_plates_must_equal_guest_count() {
+    function validate_guest_plates_must_equal_guest_count($field) {
         console.log(['validate_guest_plates_must_equal_guest_count', guest_count, get_total_meal_plates()]);
         const _return = parseInt(guest_count) === get_total_meal_plates();
 
@@ -901,5 +906,19 @@ if( $plated_meal_form.length ){
             $error_msg.show();
 
         return _return;
+    }
+
+    function validate_phone_format($field){
+        console.log($field);
+        // return;
+        let phone_number = $field.val();
+
+        var cleaned = ('' + phone_number).replace(/\D/g, '');
+        var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            $field.val('(' + match[1] + ') ' + match[2] + '-' + match[3]);
+            return true;
+        }
+        return false;
     }
 }

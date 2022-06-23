@@ -26,7 +26,7 @@
         <div class="slide-next slider-nav-button">Next</div>
     </nav>
 
-    <select class="slider-quick-nav" title="Select slide to switch to">
+    <select class="slider-quick-nav" name="slider-quick-nav" title="Select slide to switch to">
         <option value="">Jump to slide:</option>
         <?php
         echo $slider_dots;

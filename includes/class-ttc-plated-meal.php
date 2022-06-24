@@ -497,6 +497,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
 
                      echo "<h2>Catering Details</h2>";
 
+                     // @TODO: centralize this data, make it usable.
                     $exclude = array(
                         'catering_datepicker',
                         'guest_arrival_hour',
@@ -510,9 +511,11 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                         'accept_terms_conditions',
                     );
 
-                    foreach ( $catering->custom_order_details as $key => $value ) {
+                    foreach ( $catering->custom_order_details as $key => $val ) {
 
                         if( in_array( $key, $exclude) ) continue;
+
+                        $value = $val['value'];
 
                         $key = str_replace( ['-', '_'], ' ', $key );
                         $key = ucwords($key);

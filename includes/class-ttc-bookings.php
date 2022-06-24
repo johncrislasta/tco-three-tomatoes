@@ -93,6 +93,7 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookings' ) ) {
                     'end_time'          => $this->bookable->end_time,
                     'customer_name'     => $this->bookable->customer_name,
                     'number_of_guests'  => $this->bookable->number_of_guests,
+                    'custom_order_details' => $this->bookable->custom_order_details
                 ],
                 'notes' => $this->bookable->get_notes(),
                 'private_notes' => $this->bookable->get_private_notes(),

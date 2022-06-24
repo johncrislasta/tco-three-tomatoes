@@ -112,6 +112,41 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Bookables' ) ) {
                 $dates[] = date_i18n($format, strtotime($r->meta_value));
             }
 
+            // Get blocked off dates from reservation
+            $result = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT 
+                            DISTINCT pm.meta_value 
+                        FROM {$wpdb->postmeta} pm 
+                        WHERE 
+                            pm.post_id IN 
+                                ( 
+                                SELECT pm.post_id 
+                                FROM {$wpdb->postmeta} pm
+                                LEFT JOIN {$wpdb->posts} p 
+                                    ON p.ID = pm.post_id
+                                WHERE pm.meta_key = '%s'
+                                    AND pm.meta_value = '%s'
+                                    AND p.post_status = '%s'
+                                    AND p.post_type = '%s'
+                            ) 
+                        AND 
+                            pm.meta_key = '%s'",
+                    'block_off_date_for_all',
+                    1,
+                    'publish',
+                    Reservation::$post_type,
+                    'start_date'
+                )
+            );
+
+            $blocked_dates = [];
+            foreach ( $result as $r ) {
+                $blocked_dates[] = date_i18n($format, strtotime($r->meta_value));
+            }
+
+            $dates = $array = array_unique(array_merge($dates, $blocked_dates));
+
             return $dates;
         }
 

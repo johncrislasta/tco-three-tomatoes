@@ -24,7 +24,10 @@
 
 <div id="number-guest-input-wrapper" class="plated-meals-input-wrapper">
     <h3>How many guests are we expecting?</h3>
-    <input id="number-guest-input" name="number_of_guests" type="number" min="10" placeholder="10" required >
+    <input id="number-guest-input" name="number_of_guests" type="number" min="10" placeholder="10" required
+           data-custom_validation="validate_min_10"
+           data-custom_validation_message="Guests should be more than 10"
+    >
 </div>
 
 <div id="venue-select-wrapper" class="plated-meals-input-wrapper">

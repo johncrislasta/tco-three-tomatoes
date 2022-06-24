@@ -244,15 +244,17 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 ),
             );
 
-            $upload_file_slide = array (
+            $final_slides = array (
+                array (
+                    'id'        => 'plated-tax-exempt',
+                    'header'    => 'Upload files',
+                    'content'   => Acme::get_template('forms/catering/plated-05-tax-exempt'),
+                ),
                 array (
                     'id'        => 'plated-upload-files',
                     'header'    => 'Upload files',
                     'content'   => Acme::get_template('forms/catering/plated-06-upload-files'),
                 ),
-            );
-
-            $final_slides = array (
                 array (
                     'id'        => 'plated-terms-conditions',
                     'header'    => 'Almost there!',
@@ -264,7 +266,6 @@ if ( ! class_exists( 'TCo_Three_Tomatoes\Plated_Meal' ) ) {
                 $slides,
                 $addon_slides,
                 $notes_slides,
-                $upload_file_slide,
                 $final_slides
             );
 

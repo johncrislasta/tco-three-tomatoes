@@ -921,4 +921,8 @@ if( $plated_meal_form.length ){
         }
         return false;
     }
+
+    function validate_min_10($field) {
+        return $field.val() >= 10;
+    }
 }

@@ -745,6 +745,14 @@ div#plated-terms-conditions a {
 
 }
 
-input#is_tax_excempt {
+input#is_tax_exempt {
   display: none;
+
+  &:not(:checked) ~ .note-if-tax-exempted {
+    display: none;
+  }
+
+  ~ .note-if-tax-exempted {
+    margin-top: 2em;
+  }
 }
